@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
+
+
+class Fuel extends Model
+{
+    use HasFactory,HasUuids;
+    protected $fillable = [
+        'user_id',
+        'location',
+        'application_date',
+        'date',
+        'vehicle_type',
+        'vehicle_no',
+        'initial_km',
+        'final_km' ,
+        'quantity' ,
+        'mileage',
+        'rate',
+        'amount',
+        'level1',
+        'level2',
+        'level3',
+        'status',
+        'remark',
+        'expense_type_id',
+        'attachment',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(MasEmployee::class,'user_id');
+    }
+    public function vehicle()
+    {
+        return $this->belongsTo(AddVehicle::class,'vehicle_no');
+    }
+    public function FuelApproval()
+    {
+        return $this->hasOne(FuelApproval::class, 'applied_expense_id');
+    }
+  
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($Expense) {
+            // Set the casual_leave_balance based on the matched LeaveRule
+            $Expense->FuelApproval()->create([
+                'applied_expense_id' => $Expense->id
+            ]);
+        });
+    }
+
+    public static function canViewForRecord(Model $ownerRecord): bool
+    {
+        return $ownerRecord->status === 'approved';
+    }
+
+
+}
