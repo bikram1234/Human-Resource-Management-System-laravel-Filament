@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\CheckboxList;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class MasEmployeeResource extends Resource
@@ -27,6 +29,8 @@ class MasEmployeeResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $currentUserId = Auth::id();
+
         return $form
             ->schema([
                 Forms\Components\TextInput::make('first_name')
@@ -50,10 +54,13 @@ class MasEmployeeResource extends Resource
                 ->relationship('gradeStep', 'name', fn (Builder $query, callable $get) => $query->whereRaw("grade_id = ?",[$get('grade_id')]))
                 ->required()->label("Step"),
                 Forms\Components\TextInput::make('created_by')
+                    ->default('9a85ab31-70c6-47dc-90f6-c65ad4f6ba01')
+                    ->hidden()
                     ->required()
                     ->maxLength(36),
                 Forms\Components\TextInput::make('edited_by')
-                    ->maxLength(36),
+                    ->maxLength(36)
+                    ->hidden(),
                 Forms\Components\Select::make('designation_id')
                     ->relationship('designation', 'name')
                     ->required(),
