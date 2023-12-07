@@ -16,7 +16,7 @@ class department extends Model
     public function users()
     {
         // Define the relationship with the User model
-        return $this->hasMany(User::class); // Assuming you have a 'users' table
+        return $this->hasMany(MasEmployee::class); // Assuming you have a 'users' table
     }
 
     public function sections()
