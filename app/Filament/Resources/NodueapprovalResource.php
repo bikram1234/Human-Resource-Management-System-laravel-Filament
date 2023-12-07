@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 use Filament\Tables\Actions\Action;
+use App\Mail\NoDueSectionMail;
+use Illuminate\Support\Facades\Mail;
 
 
 
@@ -300,7 +302,7 @@ class NodueapprovalResource extends Resource
                 $approval->setAttribute('approver_user_id', json_encode($approverUserIds));
             
                 // Update the approval information for the current user
-                $approval->status1 = 'approved';
+                //$approval->status1 = 'approved';
                 $approval->save();
             
                 // Check if all section heads have approved
@@ -310,7 +312,27 @@ class NodueapprovalResource extends Resource
                     // Update the status to 'approved' if all section heads have approved
                     $approval->status1 = 'approved';
                     $approval->save();
-                    dd("All section heads have approved");
+                    $departments = Department::all();
+                    $departmentHeads = $departments->flatMap(function ($department) {
+                        return $department->users()->where('is_departmentHead', true)->get(); // Fetch user objects, not just IDs
+                    })->unique();
+                    
+                    // Send email to each department head
+                    foreach ($departmentHeads as $departmentHead) {
+                        $recipient = $departmentHead->email;
+                        $department = $departmentHead->first_name . ' ' . $departmentHead->last_name;
+                        $approval = nodueapproval::findOrFail($id);
+                        $user = $approval->user->name;
+
+                        
+                    
+                        // Create a new instance of NoDueMail for each department head
+                        Mail::to($recipient)->send(new NoDueSectionMail($department,$user ));
+                    }
+                    dd("All department heads have approved");
+
+
+
                     return true;
                 }
             

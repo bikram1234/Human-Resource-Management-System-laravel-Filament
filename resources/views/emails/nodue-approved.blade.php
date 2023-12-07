@@ -1,5 +1,5 @@
 @component('mail::message')
-# Expense Application
+# Leave Application
 
 Dear {{ $user->name }},
 

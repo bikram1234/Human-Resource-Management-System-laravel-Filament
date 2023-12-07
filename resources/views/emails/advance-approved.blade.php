@@ -1,5 +1,5 @@
 @component('mail::message')
-# Leave Application
+# Advance Application
 
 Dear {{ $user->name }},
 
