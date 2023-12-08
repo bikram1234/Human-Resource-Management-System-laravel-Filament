@@ -3,13 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use App\Scopes\CreatedByScope;
-use App\Scopes\EditedByScope;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Support\Facades\Auth;
 
-class ExpenseApprovalRule extends Model
+
+class LeaveEncashmentApprovalRule extends Model
 {
     use HasFactory, HasUuids;
     protected $fillable = [
@@ -24,19 +23,19 @@ class ExpenseApprovalRule extends Model
     ];
     public function type()
     {
-        return $this->belongsTo(ExpenseType::class, 'type_id');
+        return $this->belongsTo(encashment::class, 'type_id');
     }
 
      // Define the relationship to approval_conditions
      public function approvalConditions()
      {
-         return $this->hasMany(ExpenseApprovalCondition::class, 'approval_rule_id');
+         return $this->hasMany(LeaveEncashmentApprovalCondition::class, 'approval_rule_id');
      }
 
      
-    public function ExpenseFormulas()
+    public function EncashmentFormulas()
     {
-        return $this->hasMany(ExpenseFormula::class, 'approval_rule_id');
+        return $this->hasMany(LeaveEncashmentFormula::class, 'approval_rule_id');
     }
 
      protected static function boot()

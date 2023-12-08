@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\DeviceEMIResource\Pages;
-use App\Filament\Resources\DeviceEMIResource\RelationManagers;
-use App\Models\DeviceEMI;
+use App\Filament\Resources\EncashmentResource\Pages;
+use App\Filament\Resources\EncashmentResource\RelationManagers;
+use App\Models\Encashment;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -13,32 +13,28 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class DeviceEMIResource extends Resource
+class EncashmentResource extends Resource
 {
-    protected static ?string $model = DeviceEMI::class;
+    protected static ?string $model = Encashment::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
-    protected static ?string $navigationGroup = 'Work-Structure';
+    protected static ?string $navigationGroup = 'Encashment';
 
+    protected static ?string $navigationLabel = 'Type';
 
-    protected static ?string $navigationLabel = 'Device EMIs';
-
-
-    //protected static ?string $navigationGroup = 'Advance/Loan';
+    protected static ?int $navigationSort = 1;
 
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('type')
+                Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('amount')
-                ->required()
-                ->numeric()
-                ->minValue(0),            
+                Forms\Components\Toggle::make('status')
+                    ->required(),
             ]);
     }
 
@@ -46,8 +42,9 @@ class DeviceEMIResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('amount'),
+                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\IconColumn::make('status')
+                    ->boolean()
             ])
             ->filters([
                 //
@@ -55,6 +52,9 @@ class DeviceEMIResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+
+
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -71,9 +71,9 @@ class DeviceEMIResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDeviceEMIS::route('/'),
-            'create' => Pages\CreateDeviceEMI::route('/create'),
-            'edit' => Pages\EditDeviceEMI::route('/{record}/edit'),
+            'index' => Pages\ListEncashments::route('/'),
+            'create' => Pages\CreateEncashment::route('/create'),
+            'edit' => Pages\EditEncashment::route('/{record}/edit'),
         ];
     }    
 }

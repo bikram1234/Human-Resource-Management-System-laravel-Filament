@@ -1,7 +1,7 @@
 @component('mail::message')
 # Leave Application
 
-Dear {{ $user->name }},
+Dear {{ $user }},
 
 {{ $content }}
 

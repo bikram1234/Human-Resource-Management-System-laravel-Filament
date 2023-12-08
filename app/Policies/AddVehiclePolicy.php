@@ -2,26 +2,28 @@
 
 namespace App\Policies;
 
-use App\Models\Country;
+use App\Models\AddVehicle;
 use Chiiya\FilamentAccessControl\Models\FilamentUser as User;
-use Illuminate\Auth\Access\Response;
 
-class CountryPolicy
+class AddVehiclePolicy
 {
-    /**
+                /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->can("country.view");
+        return $user->can("AddVehicle.view");
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Country $country): bool
+    public function view(User $user, AddVehicle $AddVehicle): bool
     {
-        //
+        // dd($LeaveApproval->AppliedLeave->employee_id);
+
+            return $user->can("AddVehicle.view");
+        
     }
 
     /**
@@ -29,22 +31,23 @@ class CountryPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('country.create');
+        return $user->can('AddVehicle.create');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Country $country): bool
+    public function update(User $user, AddVehicle $AddVehicle): bool
     {
-        return $user->can('country.update');
+        return $user->can('AddVehicle.update');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Country $country): bool
+    public function delete(User $user, AddVehicle $AddVehicle): bool
     {
-        return $user->can('country.delete');
+        return $user->can('AddVehicle.delete');
     }
+
 }

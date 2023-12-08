@@ -19,6 +19,9 @@ class AddVehicleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
+    protected static ?string $navigationGroup = 'Work-Structure';
+
+
     public static function form(Form $form): Form
     {
         return $form

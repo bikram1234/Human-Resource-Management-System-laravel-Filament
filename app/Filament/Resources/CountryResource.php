@@ -58,7 +58,7 @@ class CountryResource extends Resource
                 DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                //Tables\Actions\DeleteBulkAction::make()
             ]);
     }
     

@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Support\Facades\Auth;
-use App\Scopes\CreatedByScope;
-use App\Scopes\EditedByScope;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ExpenseFormula extends Model
+
+class LeaveEncashmentFormula extends Model
 {
     use HasFactory, HasUuids;
 
@@ -31,7 +29,7 @@ class ExpenseFormula extends Model
 
     public function approvalRule()
     {
-        return $this->belongsTo(ExpenseApprovalRule::class, 'approval_rule_id');
+        return $this->belongsTo(LeaveEncashmentApprovalRule::class, 'approval_rule_id');
     }
 
 

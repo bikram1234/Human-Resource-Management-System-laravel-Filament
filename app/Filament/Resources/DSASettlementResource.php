@@ -27,6 +27,8 @@ use Doctrine\DBAL\Driver\OCI8\Exception\Error;
 use Symfony\Contracts\Service\Attribute\Required;
 use Filament\Tables\Actions\Action;
 use Illuminate\Support\Facades\Storage;
+use Filament\Notifications\Notification;
+
 
 class DSASettlementResource extends Resource
 {
@@ -238,6 +240,10 @@ class DSASettlementResource extends Resource
                                 if (in_array($currentDate, $seenDates)) {
                                     echo "Error: Duplicate to_date found - $currentDate";
                                     dd('same to dates');
+                                    // Notification::make() 
+                                    // ->title('To days are same ')
+                                    // ->success()
+                                    // ->send();
                                     $seenDates = null;
                                 } else {
                                     $seenDates[] = $currentDate;

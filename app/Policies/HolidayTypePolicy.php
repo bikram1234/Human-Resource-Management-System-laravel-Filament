@@ -2,26 +2,28 @@
 
 namespace App\Policies;
 
-use App\Models\Country;
+use App\Models\HolidayType;
 use Chiiya\FilamentAccessControl\Models\FilamentUser as User;
-use Illuminate\Auth\Access\Response;
 
-class CountryPolicy
+class HolidayTypePolicy
 {
-    /**
+              /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->can("country.view");
+        return $user->can("HolidayType.view");
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Country $country): bool
+    public function view(User $user, HolidayType $HolidayType): bool
     {
-        //
+        // dd($LeaveApproval->AppliedLeave->employee_id);
+
+            return $user->can("HolidayType.view");
+        
     }
 
     /**
@@ -29,22 +31,22 @@ class CountryPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('country.create');
+        return $user->can('HolidayType.create');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Country $country): bool
+    public function update(User $user, HolidayType $HolidayType): bool
     {
-        return $user->can('country.update');
+        return $user->can('HolidayType.update');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Country $country): bool
+    public function delete(User $user, HolidayType $HolidayType): bool
     {
-        return $user->can('country.delete');
+        return $user->can('HolidayType.delete');
     }
 }
