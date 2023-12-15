@@ -21,7 +21,7 @@ use App\Mail\ExpenseApplicationMail;
 use App\Models\DSASettlement;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Level;
-use App\Models\MasEmployee;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 
 class DSAApprovalResource extends Resource
 {
@@ -128,7 +128,7 @@ class DSAApprovalResource extends Resource
         $expense_id = $ExpenseApplication->expensetype_id;
         $userID = $ExpenseApplication->user_id;
  
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = ExpenseApprovalRule::where('type_id', $expense_id)->value('id');
@@ -139,7 +139,7 @@ class DSAApprovalResource extends Resource
 
         $leaveApplication = DSASettlement::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead =MasEmployee::where('section_id', $departmentId)
+        $departmentHead =FilamentUser::where('section_id', $departmentId)
         ->whereHas('roles', fn ($query) => $query->where('name', 'Department Head'))
         ->first();
 
@@ -229,7 +229,7 @@ class DSAApprovalResource extends Resource
                     // Access the 'value' field from the level record
                     $levelValue = $levelRecord->value;
                     $userID = $levelRecord->emp_id;
-                    $approval = MasEmployee::where('id', $userID)->first();
+                    $approval = FilamentUser::where('id', $userID)->first();
                     // Determine the recipient based on the levelValue
                     $recipient = $approval->email;
     
@@ -285,7 +285,7 @@ class DSAApprovalResource extends Resource
 
         $userID = $ExpenseApplication->user_id;
  
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = ExpenseApprovalRule::where('type_id', $expense_id)->value('id');

@@ -22,6 +22,8 @@ use App\Mail\NoDueSectionMail;
 use App\Mail\NoDueApproveMail;
 use Illuminate\Support\Facades\Mail;
 use Filament\Notifications\Notification;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
 
 
 
@@ -118,7 +120,7 @@ class NodueapprovalResource extends Resource
         $departmenthead = $currentUser->hasRole('Department Head');
      
         // Find the user associated with the record
-        $recordUser = MasEmployee::findOrFail($user_id);
+        $recordUser = FilamentUser::findOrFail($user_id);
      
         // Check if the current user is in the same department as the record user
         // if ($currentUser->department_id != $recordUser->department_id) {

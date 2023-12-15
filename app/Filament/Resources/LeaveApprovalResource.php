@@ -28,6 +28,8 @@ use App\Mail\LeaveApprovedMail;
 use App\Mail\LeaveApplicationMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Level;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
 
 class LeaveApprovalResource extends Resource
 {
@@ -142,7 +144,7 @@ class LeaveApprovalResource extends Resource
         $userID = $leaveApplication->employee_id;
  
         $number_of_days = $leaveApplication->number_of_days;
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = LeaveApprovalRule::where('type_id', $leave_id)->value('id');
@@ -153,7 +155,7 @@ class LeaveApprovalResource extends Resource
 
         $leaveApplication = AppliedLeave::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead =MasEmployee::where('section_id', $departmentId)
+        $departmentHead =FilamentUser::where('section_id', $departmentId)
         ->whereHas('roles', fn ($query) => $query->where('name', 'Department Head'))
         ->first();
 
@@ -248,7 +250,7 @@ class LeaveApprovalResource extends Resource
                     // Access the 'value' field from the level record
                     $levelValue = $levelRecord->value;
                     $userID = $levelRecord->emp_id;
-                    $approval = MasEmployee::where('id', $userID)->first();
+                    $approval = FilamentUser::where('id', $userID)->first();
                     // Determine the recipient based on the levelValue
                     $recipient = $approval->email;
     
@@ -304,7 +306,7 @@ class LeaveApprovalResource extends Resource
 
     public function fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days)
     {
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         
         // $totalAppliedDays = applied_leave::where('user_id', $userID)
         // ->where('leave_id', $leave_id)
@@ -358,7 +360,7 @@ class LeaveApprovalResource extends Resource
 
         $userID = $leaveApplication->employee_id;
  
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = LeaveApprovalRule::where('type_id', $expense_id)->value('id');
@@ -369,7 +371,7 @@ class LeaveApprovalResource extends Resource
 
         $leaveApplication = AppliedLeave::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead = MasEmployee::where('department_id', $departmentId)
+        $departmentHead = FilamentUser::where('department_id', $departmentId)
         ->where('is_departmentHead', true)
         ->first();
 

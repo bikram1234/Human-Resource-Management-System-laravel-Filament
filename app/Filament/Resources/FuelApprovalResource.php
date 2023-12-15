@@ -17,7 +17,7 @@ use App\Mail\ExpenseApprovedMail;
 use App\Mail\ExpenseApplicationMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Level;
-use App\Models\MasEmployee;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use App\Models\ExpenseApprovalCondition;
 use App\Models\ExpenseApprovalRule;
 use App\Models\Fuel;
@@ -131,7 +131,7 @@ class FuelApprovalResource extends Resource
         $expense_id = $ExpenseApplication->expense_type_id;
         $userID = $ExpenseApplication->user_id;
  
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = ExpenseApprovalRule::where('type_id', $expense_id)->value('id');
@@ -142,7 +142,7 @@ class FuelApprovalResource extends Resource
 
         $leaveApplication = Fuel::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead =MasEmployee::where('section_id', $departmentId)
+        $departmentHead =FilamentUser::where('section_id', $departmentId)
         ->whereHas('roles', fn ($query) => $query->where('name', 'Department Head'))
         ->first();
 
@@ -232,7 +232,7 @@ class FuelApprovalResource extends Resource
                     // Access the 'value' field from the level record
                     $levelValue = $levelRecord->value;
                     $userID = $levelRecord->emp_id;
-                    $approval = MasEmployee::where('id', $userID)->first();
+                    $approval = FilamentUser::where('id', $userID)->first();
                     // Determine the recipient based on the levelValue
                     $recipient = $approval->email;
     
@@ -287,7 +287,7 @@ class FuelApprovalResource extends Resource
 
         $userID = $ExpenseApplication->user_id;
  
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = ExpenseApprovalRule::where('type_id', $expense_id)->value('id');
@@ -298,7 +298,7 @@ class FuelApprovalResource extends Resource
 
         $leaveApplication = Fuel::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead = MasEmployee::where('department_id', $departmentId)
+        $departmentHead = FilamentUser::where('department_id', $departmentId)
         ->where('is_departmentHead', true)
         ->first();
 
