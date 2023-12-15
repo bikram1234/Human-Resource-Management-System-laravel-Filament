@@ -40,6 +40,12 @@ class DSASettlementResource extends Resource
 
     protected static ?string $navigationLabel = 'DSA Settlement';
 
+    protected static ?string $pluralModelLabel = 'DSA Settlement List';
+
+    protected static ?string $modelLabel = 'DSA Request';
+
+
+
 
     protected static ?int $navigationSort = 5;
 

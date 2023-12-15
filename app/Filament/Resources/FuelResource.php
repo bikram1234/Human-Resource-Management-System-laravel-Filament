@@ -26,11 +26,15 @@ class FuelResource extends Resource
 {
     protected static ?string $model = Fuel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-fire';
 
     protected static ?string $navigationGroup = 'Expense';
 
     protected static ?string $navigationLabel = 'Fuel';
+    protected static ?string $pluralModelLabel = 'Fuel Application List';
+    protected static ?string $modelLabel = 'Fuel Request';
+
+
 
 
     protected static ?int $navigationSort = 7;

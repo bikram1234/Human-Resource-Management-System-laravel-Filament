@@ -19,9 +19,15 @@ class StorelocationResource extends Resource
 {
     protected static ?string $model = Storelocation::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-globe';
 
     protected static ?string $navigationGroup = 'Work-Structure';
+
+    protected static ?string $navigationLabel = 'Location';
+    protected static ?string $pluralModelLabel = 'Location';
+
+    protected static ?string $modelLabel = 'Location';
+
 
     public static function form(Form $form): Form
     {

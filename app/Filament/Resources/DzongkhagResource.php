@@ -23,6 +23,9 @@ class DzongkhagResource extends Resource
 
     protected static ?string $navigationGroup = 'Work-Structure';
 
+    protected static ?string $navigationLabel = 'Dzongkhag';
+    protected static ?string $pluralModelLabel = 'Dzongkhag';
+
     public static function form(Form $form): Form
     {
         return $form

@@ -32,6 +32,11 @@ class TransferClaimResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-collection';
     protected static ?string $navigationGroup = 'Expense';
     protected static ?string $navigationLabel = 'Transfer Claim';
+    protected static ?string $pluralModelLabel = 'Transfer Claim List';
+    protected static ?string $modelLabel = 'Transfer Request';
+
+
+
     protected static ?int $navigationSort = 8;
 
 

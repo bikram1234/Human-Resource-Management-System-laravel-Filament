@@ -18,9 +18,11 @@ class LeavePolicyResource extends Resource
 {
     protected static ?string $model = LeavePolicy::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard';
 
     protected static ?string $navigationGroup = 'Leave';
+    protected static ?string $navigationLabel = 'Policy';
+
 
     protected static ?int $navigationSort = 2;
 

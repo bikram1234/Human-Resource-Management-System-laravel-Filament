@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
 
 class ApplyAdvance extends Model
 {
@@ -22,7 +24,7 @@ class ApplyAdvance extends Model
     // Define the relationship with the User model
     public function user()
     {
-        return $this->belongsTo(MasEmployee::class);
+        return $this->belongsTo(FilamentUser::class);
     }
     public function dsaSettlement()
     {
@@ -31,7 +33,7 @@ class ApplyAdvance extends Model
 
     public function manualSettlements()
     {
-        return $this->hasMany(DsaManualSettlement::class, 'advance_no', 'advance_no');
+        return $this->hasMany(DsaManual::class, 'advance_no', 'advance_no');
     }
     public function advanceType()
     {

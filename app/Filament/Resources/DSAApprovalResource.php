@@ -27,9 +27,11 @@ class DSAApprovalResource extends Resource
 {
     protected static ?string $model = DSAApproval::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-check-circle';
     protected static ?string $navigationGroup = 'Expense';
     protected static ?string $navigationLabel = 'DSA Approval';
+    protected static ?string $pluralModelLabel = 'DSA Approval List';
+
 
     protected static ?int $navigationSort = 6;
 
@@ -105,13 +107,13 @@ class DSAApprovalResource extends Resource
             //
         ];
     }
-    public function widgets(): array
-    {
-        return [
-            // Other widgets...
-            LatestApproval::class,
-        ];
-    }
+    // public function widgets(): array
+    // {
+    //     return [
+    //         // Other widgets...
+    //         LatestApproval::class,
+    //     ];
+    // }
     
     public static function getPages(): array
     {
@@ -137,8 +139,8 @@ class DSAApprovalResource extends Resource
 
         $leaveApplication = DSASettlement::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead = MasEmployee::where('department_id', $departmentId)
-        ->where('is_departmentHead', true)
+        $departmentHead =MasEmployee::where('section_id', $departmentId)
+        ->whereHas('roles', fn ($query) => $query->where('name', 'Department Head'))
         ->first();
 
         if($approvalType->approval_type === "Hierarchy"){

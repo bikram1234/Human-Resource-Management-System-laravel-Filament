@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\Hierarchy;
 use App\Models\Level;
 use App\Models\MasEmployee;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
 
 class ApprovalConditionsRelationManager extends RelationManager
 {
@@ -80,7 +82,7 @@ class ApprovalConditionsRelationManager extends RelationManager
             }),
   
             Forms\Components\Select::make('employee_id')->options(
-                MasEmployee::all()->pluck('name', 'id')->toArray()
+                FilamentUser::all()->pluck('name', 'id')->toArray()
             )
             ->visible(function(callable $get){
                 if(in_array((string)$get('approval_type'),["Single User"])){

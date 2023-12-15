@@ -18,9 +18,14 @@ class TimeZoneResource extends Resource
 {
     protected static ?string $model = TimeZone::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-clock';
 
     protected static ?string $navigationGroup = 'Work-Structure';
+
+    protected static ?string $navigationLabel = 'Time Zone';
+    protected static ?string $pluralModelLabel = 'Time Zone';
+
+    protected static ?string $modelLabel = 'Time Zone';
 
     public static function form(Form $form): Form
     {

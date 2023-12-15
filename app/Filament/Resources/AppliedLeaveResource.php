@@ -28,10 +28,14 @@ class AppliedLeaveResource extends Resource
 {
     protected static ?string $model = AppliedLeave::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
-    public static ?string $label = 'Apply Leave';
+    protected static ?string $navigationLabel = 'Apply';
+    protected static ?string $pluralModelLabel = 'Applied Leave List';
+
     protected static ?string $navigationGroup = 'Leave';
+    protected static ?string $modelLabel = 'Leave Request';
+
     protected static ?int $navigationSort = 3;
 
 

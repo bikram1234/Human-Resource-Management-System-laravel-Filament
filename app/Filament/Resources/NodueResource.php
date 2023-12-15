@@ -19,7 +19,7 @@ class NodueResource extends Resource
 {
     protected static ?string $model = Nodue::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-check';
     protected static ?string $navigationGroup = 'No Due';
     protected static ?string $navigationLabel = 'Apply';
 
@@ -55,8 +55,9 @@ class NodueResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('user.name'),
                 Tables\Columns\TextColumn::make('date'),
-                Tables\Columns\TextColumn::make('reason'),
                 Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('reason')
+
 
             ])
             ->filters([

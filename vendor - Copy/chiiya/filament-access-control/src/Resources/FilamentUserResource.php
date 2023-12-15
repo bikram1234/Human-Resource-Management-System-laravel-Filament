@@ -29,6 +29,9 @@ class FilamentUserResource extends Resource
 {
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
+    protected static ?string $navigationLabel = 'All Employee';
+
+
     public static function form(Form $form): Form
     {
         return $form

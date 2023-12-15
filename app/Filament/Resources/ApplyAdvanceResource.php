@@ -32,6 +32,8 @@ class ApplyAdvanceResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-collection';
     protected static ?string $navigationLabel = 'Apply';
     protected static ?string $navigationGroup = 'Advance/Loan';
+    protected static ?string $pluralModelLabel = 'Advance Application List';
+
     protected static ?int $navigationSort = 2;
 
 

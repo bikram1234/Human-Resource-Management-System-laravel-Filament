@@ -24,13 +24,13 @@ class ListNodueapprovals extends ListRecords
     $query = parent::getTableQuery();
     $user = auth()->user();
    
-    if ($user->is_sectionHead) {
+    if ($user->hasRole('Section Head')) {
         $sectionHeadId = $user->section_id;
         $query->whereHas('nodue.user', function ($subQuery) use ($sectionHeadId) {
             $subQuery->where('section_id', $sectionHeadId);
         })->where('status1', 'pending');
     }
-    elseif ($user->is_departmentHead) {
+    elseif ($user->hasRole('Department Head')) {
         $departmentHeadId = $user->department_id;
         $query->whereHas('nodue.user', function ($subQuery) use ($departmentHeadId) {
         })->whereHas('nodue', function($subQuery){

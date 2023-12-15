@@ -17,9 +17,17 @@ class AddVehicleResource extends Resource
 {
     protected static ?string $model = AddVehicle::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-truck';
 
     protected static ?string $navigationGroup = 'Work-Structure';
+    protected static ?string $navigationLabel = 'Vehicle';
+    protected static ?string $pluralModelLabel = 'Vehicle List';
+    protected static ?string $modelLabel = 'Vehicle';
+
+    protected static ?int $navigationSort = 10;
+
+
+
 
 
     public static function form(Form $form): Form

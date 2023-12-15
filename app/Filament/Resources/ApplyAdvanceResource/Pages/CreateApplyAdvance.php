@@ -9,7 +9,9 @@ use App\Models\AdvanceApprovalRule;
 use App\Models\Level;
 use App\Mail\AdvanceApplicationMail;
 use Illuminate\Support\Facades\Mail;
+use Spatie\Permission\Models\Role;
 use App\Models\MasEmployee;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use App\Models\AdvanceApprovalCondition;
 
 class CreateApplyAdvance extends CreateRecord
@@ -19,8 +21,13 @@ class CreateApplyAdvance extends CreateRecord
     {
         $currentUser = auth()->user();
         $sectionId = auth()->user()->section_id;
-        $sectionHead = MasEmployee::where('section_id', $sectionId)
-        ->where('is_sectionHead', true)->first();
+        // $sectionHead = MasEmployee::where('section_id', $sectionId)
+        // ->where('roles', 'Section Head')->first();
+        // Assuming 'Section Head' is the name of the role you want to find
+
+        $sectionHead = FilamentUser::where('section_id', $sectionId)
+            ->whereHas('roles', fn ($query) => $query->where('name', 'Section Head'))
+            ->first();
        
         $advance_id = $data['advance_type_id'];
         $approvalRuleId = AdvanceApprovalRule::where('type_id', $advance_id)->value('id');

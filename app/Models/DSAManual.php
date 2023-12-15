@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 
 class DSAManual extends Model
 {
@@ -26,7 +27,7 @@ class DSAManual extends Model
     ];
     public function user()
     {
-        return $this->belongsTo(MasEmployee::class,'user_id');
+        return $this->belongsTo(FilamentUser::class,'user_id');
     } 
     public function dsasettlement()
     {

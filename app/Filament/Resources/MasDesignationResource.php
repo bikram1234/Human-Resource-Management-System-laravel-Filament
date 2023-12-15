@@ -18,7 +18,16 @@ class MasDesignationResource extends Resource
 {
     protected static ?string $model = MasDesignation::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
+
+    protected static ?string $navigationLabel = 'Designation';
+
+    protected static ?string $pluralModelLabel = 'All Designation';
+
+    protected static ?string $modelLabel = 'Designation';
+
+
+
 
     protected static ?string $navigationGroup = 'Employee-Master';
 
