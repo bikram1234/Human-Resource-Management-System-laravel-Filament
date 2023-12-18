@@ -296,7 +296,7 @@ class DSAApprovalResource extends Resource
 
         $leaveApplication = DSASettlement::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead = MasEmployee::where('department_id', $departmentId)
+        $departmentHead = FilamentUser::where('department_id', $departmentId)
         ->where('is_departmentHead', true)
         ->first();
 
