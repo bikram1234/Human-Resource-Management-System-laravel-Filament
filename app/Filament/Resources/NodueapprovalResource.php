@@ -143,7 +143,7 @@ class NodueapprovalResource extends Resource
                     ->pluck('id')
                     ->toArray();
             })->unique();
-           dd($sectionHeadIDs);
+           //dd($sectionHeadIDs);
         
             if ($sectionHeadIDs->contains($currentUser->id)) {
                 // Check if the current user has already approved
