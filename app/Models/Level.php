@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use App\Scopes\CreatedByScope;
 use App\Scopes\EditedByScope;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 
 class Level extends Model
 {
@@ -26,7 +27,7 @@ class Level extends Model
     ];
     public function employeeName()
     {
-        return $this->belongsTo(MasEmployee::class, 'emp_id');
+        return $this->belongsTo(FilamentUser::class, 'emp_id');
     }
 
     public function hierarchy()

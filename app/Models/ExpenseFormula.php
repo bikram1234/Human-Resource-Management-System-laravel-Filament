@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use App\Scopes\CreatedByScope;
 use App\Scopes\EditedByScope;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ExpenseFormula extends Model
@@ -26,7 +27,7 @@ class ExpenseFormula extends Model
     ];
 
     public function employee() {
-        return $this->belongsTo(MasEmployee::class, 'employee_id');
+        return $this->belongsTo(FilamentUser::class, 'employee_id');
     }
 
     public function approvalRule()

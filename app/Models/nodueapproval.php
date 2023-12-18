@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
@@ -17,15 +18,15 @@ class nodueapproval extends Model
     }
     public function user()
     {
-        return $this->belongsTo(MasEmployee::class, 'user_id');
+        return $this->belongsTo(FilamentUser::class, 'user_id');
     }
     public function approver()
     {
-        return $this->belongsTo(MasEmployee::class, 'approver_user_id');
+        return $this->belongsTo(FilamentUser::class, 'approver_user_id');
     }
     public function department_approval()
     {
-        return $this->belongsTo(MasEmployee::class, 'department_approval_id');
+        return $this->belongsTo(FilamentUser::class, 'department_approval_id');
     }
 
 

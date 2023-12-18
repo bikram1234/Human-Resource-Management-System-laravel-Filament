@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +20,6 @@ class LeaveBalance extends Model
 
     public function employee()
     {
-        return $this->belongsTo(MasEmployee::class, 'employee_id');
+        return $this->belongsTo(FilamentUser::class, 'employee_id');
     }
 }

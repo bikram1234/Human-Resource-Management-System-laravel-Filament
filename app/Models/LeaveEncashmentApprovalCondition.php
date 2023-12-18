@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +37,7 @@ class LeaveEncashmentApprovalCondition extends Model
  
      public function employee()
      {
-         return $this->belongsTo(MasEmployee::class, 'employee_id');
+         return $this->belongsTo(FilamentUser::class, 'employee_id');
      }
  
  

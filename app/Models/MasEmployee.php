@@ -45,13 +45,7 @@ class MasEmployee extends FilamentUser
         ];
 
 
-        /**
-     * Check whether the user is a super admin.
-     */
-    public function isSuperAdmin(): bool
-    {
-        return $this->hasRole(RoleName::SUPER_ADMIN);
-    }
+     
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id');
