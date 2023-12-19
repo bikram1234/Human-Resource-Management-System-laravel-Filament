@@ -9,7 +9,7 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\MasGradeStep;
+use App\Models\MasGrade;
 
 class LeaveRulesRelationManager extends RelationManager
 {
@@ -21,9 +21,9 @@ class LeaveRulesRelationManager extends RelationManager
     {
         return $form
         ->schema([
-            Forms\Components\Select::make('grade_step_id')
+            Forms\Components\Select::make('grade_id')
             ->options(
-                MasGradeStep::all()->pluck('name', 'id')->toArray()
+                MasGrade::all()->pluck('name', 'id')->toArray()
             )
             ->required(),
             Forms\Components\TextInput::make('duration')

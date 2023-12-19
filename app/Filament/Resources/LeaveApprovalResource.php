@@ -318,7 +318,7 @@ class LeaveApprovalResource extends Resource
         $leavePolicyId = LeavePolicy::where('leave_id', $leave_id)->value('id');
 
         $leaveRule = LeaveRule::where('policy_id', $leavePolicyId)
-        ->where('grade_step_id', $user->grade_step_id)
+        ->where('grade_id', $user->grade_id)
         ->first();
 
         if (!$leaveRule) {

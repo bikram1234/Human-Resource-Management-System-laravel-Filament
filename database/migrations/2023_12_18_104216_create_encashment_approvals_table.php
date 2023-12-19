@@ -11,19 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('leave_rules', function (Blueprint $table) {
+        Schema::create('encashment_approvals', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('policy_id');
-            $table->foreign('policy_id')->references('id')->on('leave_policies')->onDelete('RESTRICT')->onUpdate('CASCADE');
-            $table->uuid('grade_id');
-            $table->foreign('grade_id')->on("mas_grades")->references('id')->restrictOnDelete()->cascadeOnUpdate();
-            $table->integer('duration');
-            $table->string('uom');
-            $table->date('start_date');
-            $table->date('end_date')->nullable();
-            $table->boolean('islossofpay')->default(false);
-            $table->string('employee_type');
-            $table->boolean('status')->default(true);
+            $table->uuid('applied_encashment_id');
+            $table->foreign("applied_encashment_id")->references("id")->on("applied_encashments")->onDelete('RESTRICT')->onUpdate('CASCADE');            
+            $table->string('level1')->default('pending');
+            $table->string('level2')->default('pending');
+            $table->string('level3')->default('pending');
+            $table->string('remark')->nullable();
             $table->unsignedBigInteger("created_by")->index();
             $table->unsignedBigInteger("edited_by")->index()->nullable();
             $table->foreign("created_by")->references("id")->on("mas_employees")->onDelete('RESTRICT')->onUpdate('CASCADE');
@@ -37,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('leave_rules');
+        Schema::dropIfExists('encashment_approvals');
     }
 };

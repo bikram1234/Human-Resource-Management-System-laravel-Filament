@@ -99,7 +99,7 @@ class AppliedLeaveResource extends Resource
                         $leavePolicyId = LeavePolicy::where('leave_id', [$state])->value('id');
 
                         $leaveRule = LeaveRule::where('policy_id', $leavePolicyId)
-                        ->where('grade_step_id', auth()->user()->grade_step_id)
+                        ->where('grade_id', auth()->user()->grade_id)
                         ->first();
 
                         if($leaveRule) {

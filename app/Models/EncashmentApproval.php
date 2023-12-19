@@ -2,44 +2,33 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
 use App\Scopes\CreatedByScope;
 use App\Scopes\EditedByScope;
 
-class LeaveRule extends Model
+class EncashmentApproval extends Model
 {
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        "policy_id",
-        "grade_id",
-        "duration",
-        "uom",
-        "start_date",
-        "end_date",
-        "islossofpay",
-        "employee_type",
-        "status",
+        'applied_encashment_id',
+        'level1',
+        'level2',
+        'level3',
+        'status',
+        'remark',
         'created_by',
-        'edited_by',
+        'edited_by'
     ];
+    
 
-    public function policy()
-    {
-        return $this->belongsTo(LeavePolicy::class, 'policy_id');
+    public function EncashmentApply() {
+        return $this->belongsTo(AppliedEncashment::class, 'applied_encashment_id');
     }
 
-    public function grade() {
-        return $this->belongsTo(MasGrade::class, 'grade_id');
-    }
-
-    public function leaves()
-    {
-        return $this->hasMany(LeaveType::class); 
-    }
 
     protected static function boot()
     {
