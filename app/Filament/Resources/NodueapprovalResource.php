@@ -57,7 +57,7 @@ class NodueapprovalResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('user.name'),
                 Tables\Columns\TextColumn::make('date'),
-                Tables\Columns\TextColumn::make('nodue.reason')->label("Reason"),
+                // Tables\Columns\TextColumn::make('nodue.reason')->label("Reason"),
                 Tables\Columns\TextColumn::make('nodue.status')->label("Status"),
                 
             ])

@@ -324,7 +324,10 @@ class AppliedLeaveResource extends Resource
                 Action::make('Download')
                 ->action(fn (AppliedLeave $record) => AppliedLeaveResource::downloadFile($record))
                 ->icon('heroicon-s-download')
-                ->iconPosition('before'),
+                ->iconPosition('before')
+                ->hidden(function ( AppliedLeave $record) {
+                    return $record->file_path === null;
+                })
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

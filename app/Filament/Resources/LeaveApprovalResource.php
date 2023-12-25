@@ -173,6 +173,7 @@ class LeaveApprovalResource extends Resource
                 // $this->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
                 $instance = new self(); // Create an instance
                 $instance->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
+                $instance->fetchEarnedLeaveBalance($leave_id,  $userID, $number_of_days);
                 $content = "The leave you have applied for has been approved.";
             
                 Mail::to($Approvalrecipient)->send(new LeaveApprovedMail($user, $content));
@@ -229,6 +230,7 @@ class LeaveApprovalResource extends Resource
                 // $this->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
                 $instance = new self(); // Create an instance
                 $instance->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
+                $instance->fetchEarnedLeaveBalance($leave_id,  $userID, $number_of_days);
     
                 $content = "The leave you have applied for has been approved.";
                 Mail::to($Approvalrecipient)->send(new LeaveApprovedMail($user, $content));
@@ -272,6 +274,7 @@ class LeaveApprovalResource extends Resource
 
                 $instance = new self(); // Create an instance
                 $instance->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
+                $instance->fetchEarnedLeaveBalance($leave_id,  $userID, $number_of_days);
 
                 $content = "The leave you have applied for has been approved.";
                 
@@ -291,6 +294,7 @@ class LeaveApprovalResource extends Resource
             // $this->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
             $instance = new self(); // Create an instance
             $instance->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
+            $instance->fetchEarnedLeaveBalance($leave_id,  $userID, $number_of_days);
             $content = "The leave you have applied for has been approved.";
         
             Mail::to($Approvalrecipient)->send(new LeaveApprovedMail($user, $content));
@@ -338,6 +342,54 @@ class LeaveApprovalResource extends Resource
             if($leavetype->name === 'Casual Leave'){
                 $leaveBalanceNow = ($leaveBalanceRecord->casual_leave_balance) - $totalAppliedDays;
                 $leaveBalanceRecord->casual_leave_balance = $leaveBalanceNow;
+                $leaveBalanceRecord->save();
+            }
+            // Update the existing leave balance record
+        
+        } else {
+           
+            // Create a new leave balance record if it doesn't exist
+            LeaveBalance::create([
+                'user_id' => $userID, 
+                'casual_leave_balance' => $leaveBalanceNow,
+            ]);
+        }
+    }
+    public function fetchEarnedLeaveBalance($leave_id,  $userID, $number_of_days)
+    {
+        $user = FilamentUser::where('id', $userID)->first();
+        
+        // $totalAppliedDays = applied_leave::where('user_id', $userID)
+        // ->where('leave_id', $leave_id)
+        // ->where('status', 'approved')
+        // ->sum('number_of_days');
+        $totalAppliedDays = $number_of_days;
+        $leavetype = LeaveType::where('id', $leave_id)->first();
+
+        $leavePolicyId = LeavePolicy::where('leave_id', $leave_id)->value('id');
+
+        $leaveRule = LeaveRule::where('policy_id', $leavePolicyId)
+        ->where('grade_id', $user->grade_id)
+        ->first();
+        //dd($leaveRule);
+
+        if (!$leaveRule) {
+            return redirect()->back()->with('error', 'Leave rule not found');
+        }
+
+        $leaveDuration = $leaveRule->duration;
+
+        // 3. Calculate the leave balance by subtracting the applied days from the leave duration
+      
+        // $leaveBalanceNow = $leaveDuration - $totalAppliedDays;
+
+        $leaveBalanceRecord = LeaveBalance::where('Employee_id', $userID)
+        ->first();
+
+        if ($leaveBalanceRecord) {
+            if($leavetype->name === 'Earned Leave'){
+                $leaveBalanceNow = ($leaveBalanceRecord->earned_leave_balance) - $totalAppliedDays;
+                $leaveBalanceRecord->earned_leave_balance = $leaveBalanceNow;
                 $leaveBalanceRecord->save();
             }
             // Update the existing leave balance record
