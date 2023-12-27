@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\LeavePolicyResource\RelationManagers;
 
+use App\Models\LeavePlan;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -125,7 +126,17 @@ class LeavePlanRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                ->hidden(function ($record) {
+                    // Check if $record is not null and the policy_id is 'LeavePlan'
+                    if ($record instanceof LeavePlan && $record->policy_id === 'LeavePlan') {
+                        return true; // Hide attributes when the conditions are met
+                    }
+                
+                    return false; // Do not hide attributes when $record is null or policy_id is not 'LeavePlan'
+                }),
+                
+                
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

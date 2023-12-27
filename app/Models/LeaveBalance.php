@@ -22,4 +22,6 @@ class LeaveBalance extends Model
     {
         return $this->belongsTo(FilamentUser::class, 'employee_id');
     }
+    
+
 }

@@ -25,7 +25,8 @@ class LeaveRulesRelationManager extends RelationManager
             ->options(
                 MasGrade::all()->pluck('name', 'id')->toArray()
             )
-            ->required(),
+            ->required()
+            ->label("Grade"),
             Forms\Components\TextInput::make('duration')
                 ->required(),
             Forms\Components\Select::make('uom')->options([
@@ -56,7 +57,7 @@ class LeaveRulesRelationManager extends RelationManager
         return $table
         ->columns([
             Tables\Columns\TextColumn::make('policy.policy_name'),
-            Tables\Columns\TextColumn::make('gradeStep.name'),
+            Tables\Columns\TextColumn::make('grade.name'),
             Tables\Columns\TextColumn::make('duration'),
             Tables\Columns\TextColumn::make('uom'),
             Tables\Columns\TextColumn::make('start_date')

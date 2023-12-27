@@ -30,16 +30,14 @@ class LeavePolicy extends Model
     {
         return $this->belongsTo(leavetype::class, 'leave_id');
     }
-
+    public function LeaveRules()
+    {
+        return $this->hasMany(LeaveRule::class, 'policy_id');
+    }
 
     public function LeavePlan()
     {
         return $this->hasOne(LeavePlan::class, 'policy_id');
-    }
-
-    public function LeaveRules()
-    {
-        return $this->hasMany(LeaveRule::class, 'policy_id');
     }
 
     public function YearEndProcess()
