@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Scopes\CreatedByScope;
 use App\Scopes\EditedByScope;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
 
 class AppliedLeave extends Model
 {
@@ -27,7 +29,7 @@ class AppliedLeave extends Model
     
 
     public function employee() {
-        return $this->belongsTo(MasEmployee::class, 'employee_id');
+        return $this->belongsTo(FilamentUser::class, 'employee_id');
     }
 
     public function leavetype(){
@@ -36,7 +38,7 @@ class AppliedLeave extends Model
 
     public function user()
     {
-        return $this->belongsTo(MasEmployee::class, 'employee_id');
+        return $this->belongsTo(FilamentUser::class, 'employee_id');
     }
 
     public function leaveApproval()

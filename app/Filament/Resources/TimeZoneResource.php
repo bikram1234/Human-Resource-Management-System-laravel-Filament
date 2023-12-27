@@ -18,9 +18,14 @@ class TimeZoneResource extends Resource
 {
     protected static ?string $model = TimeZone::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-clock';
 
     protected static ?string $navigationGroup = 'Work-Structure';
+
+    protected static ?string $navigationLabel = 'Time Zone';
+    protected static ?string $pluralModelLabel = 'Time Zone';
+
+    protected static ?string $modelLabel = 'Time Zone';
 
     public static function form(Form $form): Form
     {
@@ -30,6 +35,7 @@ class TimeZoneResource extends Resource
                 ->options(
                     Country::all()->pluck('name', 'id')->toArray()
                 )
+                ->label("Country")
                 ->required(),
                 Forms\Components\TextInput::make('timezone')
                     ->required()
@@ -51,10 +57,6 @@ class TimeZoneResource extends Resource
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\IconColumn::make('status')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
             ])
             ->filters([
                 //

@@ -33,6 +33,12 @@ class ExpenseApplicationResource extends Resource
 
     protected static ?string $navigationLabel = 'Apply';
 
+    protected static ?string $pluralModelLabel = 'Expense Application List';
+
+    protected static ?string $modelLabel = 'Expense Request';
+
+
+
 
     protected static ?int $navigationSort = 3;
 

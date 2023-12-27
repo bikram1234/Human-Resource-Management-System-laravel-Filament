@@ -17,7 +17,7 @@ class HolidayTypeResource extends Resource
 {
     protected static ?string $model = HolidayType::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-gift';
 
     protected static ?string $navigationGroup = 'Work-Structure';
 

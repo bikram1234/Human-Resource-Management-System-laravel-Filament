@@ -16,6 +16,7 @@ use App\Models\LeaveType;
 
 class MasEmployee extends FilamentUser
 {
+    use HasRoles;
 
         protected $table = 'mas_employees';
 
@@ -31,7 +32,6 @@ class MasEmployee extends FilamentUser
             "grade_id",
             "grade_step_id",
             "created_by",
-            "edited_by",
             'department_id',
             'section_id',
             "designation_id",
@@ -39,12 +39,13 @@ class MasEmployee extends FilamentUser
             'gender',
             'employment_type',
             'region_id',
-            'is_sectionHead',
-            'is_departmentHead',
+            // 'is_sectionHead',
+            // 'is_departmentHead',
             'password',
         ];
 
 
+     
     public function department()
     {
         return $this->belongsTo(Department::class, 'department_id');
@@ -67,13 +68,17 @@ class MasEmployee extends FilamentUser
     }
 
 
-    public function assignUserRole($roleName)
-    {
-        $role = Role::where('name', $roleName)->first();
-        if ($role) {
-            $this->assignRole($role);
-        }
-    }
+    // public function assignUserRole($roleName)
+    // {
+    //     parent::assignUserRole($roleName);
+
+    //     $role = Role::where('name', $roleName)->first();
+    //     if ($role) {
+    //         $this->assignRole($role);
+    //         $this->save();
+
+    //     }
+    // }
 
     public function appliedLeaves()
     {
@@ -111,16 +116,37 @@ class MasEmployee extends FilamentUser
                 'earned_leave_balance' => 0.0  
             ]);
 
-        static::created(function ($masEmployee) {
+        // static::created(function ($masEmployee) {
+
+
+        //     // Get the selected role IDs from the form data
+        //     $selectedRoles = request('roles');
+
+        //     // Find the roles in the database
+        //     $roles = Role::find($selectedRoles);
+
+        //     // Assign the roles to the new MasEmployee
+        //     $masEmployee->roles()->attach($roles);
+        // });
+
+        static::created(function ($employee) {
             // Get the selected role IDs from the form data
             $selectedRoles = request('roles');
-
+         
             // Find the roles in the database
             $roles = Role::find($selectedRoles);
-
+         
             // Assign the roles to the new MasEmployee
-            $masEmployee->roles()->attach($roles);
-        });
+            $employee->roles()->attach($roles);
+         
+            // Get the FilamentUser model associated with the MasEmployee
+            $filamentUser = FilamentUser::find($employee->id);
+         
+            // Assign the roles to the FilamentUser model
+            $filamentUser->roles()->attach($roles);
+         });
+        
+        
         });
     }
 

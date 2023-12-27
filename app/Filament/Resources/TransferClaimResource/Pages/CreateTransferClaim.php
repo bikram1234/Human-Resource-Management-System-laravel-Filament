@@ -19,8 +19,11 @@ class CreateTransferClaim extends CreateRecord
     {
         $currentUser = auth()->user();
         $sectionId = auth()->user()->section_id;
+        // $sectionHead = MasEmployee::where('section_id', $sectionId)
+        // ->where('is_sectionHead', true)->first();
         $sectionHead = MasEmployee::where('section_id', $sectionId)
-        ->where('is_sectionHead', true)->first();
+        ->whereHas('roles', fn ($query) => $query->where('name', 'Section Head'))
+        ->first();
        
         $expense_id = $data['expense_type_id'];
         $approvalRuleId = ExpenseApprovalRule::where('type_id', $expense_id)->value('id');

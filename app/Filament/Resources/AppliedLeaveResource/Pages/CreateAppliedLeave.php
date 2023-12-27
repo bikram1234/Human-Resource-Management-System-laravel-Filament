@@ -11,6 +11,9 @@ use App\Mail\LeaveApplicationMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\MasEmployee;
 use App\Models\LeaveApprovalCondition;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
+
 
 class CreateAppliedLeave extends CreateRecord
 {
@@ -20,8 +23,11 @@ class CreateAppliedLeave extends CreateRecord
 {
     $currentUser = auth()->user();
     $sectionId = auth()->user()->section_id;
-    $sectionHead = MasEmployee::where('section_id', $sectionId)
-    ->where('is_sectionHead', true)->first();
+    // $sectionHead = MasEmployee::where('section_id', $sectionId)
+    // ->where('is_sectionHead', true)->first();
+    $sectionHead = FilamentUser::where('section_id', $sectionId)
+    ->whereHas('roles', fn ($query) => $query->where('name', 'Section Head'))
+    ->first();
    
     $leave_id = $data['leave_id'];
     $approvalRuleId = LeaveApprovalRule::where('type_id', $leave_id)->value('id');

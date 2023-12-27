@@ -17,7 +17,7 @@ use App\Mail\ExpenseApprovedMail;
 use App\Mail\ExpenseApplicationMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Level;
-use App\Models\MasEmployee;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use App\Models\ExpenseApprovalCondition;
 use App\Models\ExpenseApprovalRule;
 use App\Models\Fuel;
@@ -28,8 +28,13 @@ class FuelApprovalResource extends Resource
 {
     protected static ?string $model = FuelApproval::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-check-circle';
     protected static ?string $navigationGroup = 'Expense';
+    protected static ?string $navigationLabel = 'Fuel Approval';
+
+    protected static ?string $pluralModelLabel = 'Fuel Approval List';
+
+
     protected static ?int $navigationSort = 8;
 
 
@@ -55,16 +60,16 @@ class FuelApprovalResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('ExpenseApply.user.name'),
-                Tables\Columns\TextColumn::make('ExpenseApply.application_date')
+                Tables\Columns\TextColumn::make('FuelApply.user.name'),
+                Tables\Columns\TextColumn::make('FuelApply.application_date')
                 ->label("Application date"),
-                Tables\Columns\TextColumn::make('ExpenseApply.location')
+                Tables\Columns\TextColumn::make('FuelApply.location')
                 ->label("Location"),
-                Tables\Columns\TextColumn::make('ExpenseApply.vehicle_type')
+                Tables\Columns\TextColumn::make('FuelApply.vehicle_type')
                 ->label("Vehicle"),
-                Tables\Columns\TextColumn::make('ExpenseApply.vehicle_type')
+                Tables\Columns\TextColumn::make('FuelApply.vehicle_type')
                 ->label("Mileage"),
-                Tables\Columns\TextColumn::make('ExpenseApply.status')
+                Tables\Columns\TextColumn::make('FuelApply.status')
                 ->label("Status"),
             ])
             ->filters([
@@ -104,13 +109,13 @@ class FuelApprovalResource extends Resource
             //
         ];
     }
-    public function widgets(): array
-    {
-        return [
-            // Other widgets...
-            LatestApproval::class,
-        ];
-    }
+    // public function widgets(): array
+    // {
+    //     return [
+    //         // Other widgets...
+    //         LatestApproval::class,
+    //     ];
+    // }
     
     
     public static function getPages(): array
@@ -126,7 +131,7 @@ class FuelApprovalResource extends Resource
         $expense_id = $ExpenseApplication->expense_type_id;
         $userID = $ExpenseApplication->user_id;
  
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = ExpenseApprovalRule::where('type_id', $expense_id)->value('id');
@@ -137,8 +142,8 @@ class FuelApprovalResource extends Resource
 
         $leaveApplication = Fuel::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead = MasEmployee::where('department_id', $departmentId)
-        ->where('is_departmentHead', true)
+        $departmentHead =FilamentUser::where('section_id', $departmentId)
+        ->whereHas('roles', fn ($query) => $query->where('name', 'Department Head'))
         ->first();
 
         if($approvalType->approval_type === "Hierarchy"){
@@ -227,7 +232,7 @@ class FuelApprovalResource extends Resource
                     // Access the 'value' field from the level record
                     $levelValue = $levelRecord->value;
                     $userID = $levelRecord->emp_id;
-                    $approval = MasEmployee::where('id', $userID)->first();
+                    $approval = FilamentUser::where('id', $userID)->first();
                     // Determine the recipient based on the levelValue
                     $recipient = $approval->email;
     
@@ -282,7 +287,7 @@ class FuelApprovalResource extends Resource
 
         $userID = $ExpenseApplication->user_id;
  
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = ExpenseApprovalRule::where('type_id', $expense_id)->value('id');
@@ -293,7 +298,7 @@ class FuelApprovalResource extends Resource
 
         $leaveApplication = Fuel::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead = MasEmployee::where('department_id', $departmentId)
+        $departmentHead = FilamentUser::where('department_id', $departmentId)
         ->where('is_departmentHead', true)
         ->first();
 

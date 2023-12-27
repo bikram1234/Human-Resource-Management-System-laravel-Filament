@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,7 +25,7 @@ class section extends Model
     public function users()
     {
         // Define the relationship with the User model
-        return $this->hasMany(MasEmployee::class); // Assuming you have a 'users' table
+        return $this->hasMany(FilamentUser::class); // Assuming you have a 'users' table
     }
 }
 

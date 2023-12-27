@@ -17,12 +17,14 @@ class DeviceEMIResource extends Resource
 {
     protected static ?string $model = DeviceEMI::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-phone';
 
     protected static ?string $navigationGroup = 'Work-Structure';
 
 
     protected static ?string $navigationLabel = 'Device EMIs';
+    protected static ?string $pluralModelLabel = 'Device EMI list';
+    protected static ?string $modelLabel = 'Device';
 
 
     //protected static ?string $navigationGroup = 'Advance/Loan';

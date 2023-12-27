@@ -56,7 +56,9 @@ class IncrementEarnedLeave extends Command
                                     if ($user->leaveBalance) {
                                         $user->leaveBalance->increment('earned_leave_balance', $duration);
                                         // Add log statement
-                                        info("User ID: {$user->id}, Incremened earned leave by $duration days.");
+                                      info("User ID: {$user->id}, Incremented earned leave by $duration days.");
+
+
                                     } else {
                                         // Add log statement for missing leave balance
                                         info("User ID: {$user->id}, Missing Leave Balance for Earned Leave.");

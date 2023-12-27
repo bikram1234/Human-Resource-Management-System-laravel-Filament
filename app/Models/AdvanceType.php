@@ -24,6 +24,6 @@ class AdvanceType extends Model
     }
     public function advancetype()
     {
-        return $this->hasMany(AdvanceApplication::class, 'advance_type_id');
+        return $this->hasMany(ApplyAdvance::class, 'advance_type_id');
     }
 }

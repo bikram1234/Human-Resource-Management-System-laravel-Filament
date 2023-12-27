@@ -19,9 +19,15 @@ class StorelocationResource extends Resource
 {
     protected static ?string $model = Storelocation::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-globe';
 
     protected static ?string $navigationGroup = 'Work-Structure';
+
+    protected static ?string $navigationLabel = 'Location';
+    protected static ?string $pluralModelLabel = 'Location';
+
+    protected static ?string $modelLabel = 'Location';
+
 
     public static function form(Form $form): Form
     {
@@ -31,11 +37,13 @@ class StorelocationResource extends Resource
                 ->options(
                     Dzongkhag::all()->pluck('name', 'id')->toArray()
                 )
+                ->label("Dzongkhag")
                 ->required(),
                 Forms\Components\Select::make('timezone_id')
                 ->options(
                     TimeZone::all()->pluck('name', 'id')->toArray()
                 )
+                ->label("Time Zone")
                 ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
@@ -56,10 +64,6 @@ class StorelocationResource extends Resource
                 Tables\Columns\TextColumn::make('timezone.name'),  
                 Tables\Columns\IconColumn::make('status')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
             ])
             ->filters([
                 //

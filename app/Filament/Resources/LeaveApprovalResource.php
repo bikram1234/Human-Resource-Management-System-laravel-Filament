@@ -28,14 +28,20 @@ use App\Mail\LeaveApprovedMail;
 use App\Mail\LeaveApplicationMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Level;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
 
 class LeaveApprovalResource extends Resource
 {
     protected static ?string $model = LeaveApproval::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-check-circle';
 
     protected static ?string $navigationGroup = 'Leave';
+    protected static ?string $navigationLabel = 'Approval';
+    protected static ?string $pluralModelLabel = 'Leave Approval List';
+
+
 
     protected static ?int $navigationSort = 4;
 
@@ -138,7 +144,7 @@ class LeaveApprovalResource extends Resource
         $userID = $leaveApplication->employee_id;
  
         $number_of_days = $leaveApplication->number_of_days;
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = LeaveApprovalRule::where('type_id', $leave_id)->value('id');
@@ -149,8 +155,8 @@ class LeaveApprovalResource extends Resource
 
         $leaveApplication = AppliedLeave::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead = MasEmployee::where('department_id', $departmentId)
-        ->where('is_departmentHead', true)
+        $departmentHead =FilamentUser::where('section_id', $departmentId)
+        ->whereHas('roles', fn ($query) => $query->where('name', 'Department Head'))
         ->first();
 
         if($approvalType->approval_type === "Hierarchy"){
@@ -167,6 +173,7 @@ class LeaveApprovalResource extends Resource
                 // $this->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
                 $instance = new self(); // Create an instance
                 $instance->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
+                $instance->fetchEarnedLeaveBalance($leave_id,  $userID, $number_of_days);
                 $content = "The leave you have applied for has been approved.";
             
                 Mail::to($Approvalrecipient)->send(new LeaveApprovedMail($user, $content));
@@ -223,6 +230,7 @@ class LeaveApprovalResource extends Resource
                 // $this->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
                 $instance = new self(); // Create an instance
                 $instance->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
+                $instance->fetchEarnedLeaveBalance($leave_id,  $userID, $number_of_days);
     
                 $content = "The leave you have applied for has been approved.";
                 Mail::to($Approvalrecipient)->send(new LeaveApprovedMail($user, $content));
@@ -244,7 +252,7 @@ class LeaveApprovalResource extends Resource
                     // Access the 'value' field from the level record
                     $levelValue = $levelRecord->value;
                     $userID = $levelRecord->emp_id;
-                    $approval = MasEmployee::where('id', $userID)->first();
+                    $approval = FilamentUser::where('id', $userID)->first();
                     // Determine the recipient based on the levelValue
                     $recipient = $approval->email;
     
@@ -266,6 +274,7 @@ class LeaveApprovalResource extends Resource
 
                 $instance = new self(); // Create an instance
                 $instance->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
+                $instance->fetchEarnedLeaveBalance($leave_id,  $userID, $number_of_days);
 
                 $content = "The leave you have applied for has been approved.";
                 
@@ -285,6 +294,7 @@ class LeaveApprovalResource extends Resource
             // $this->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
             $instance = new self(); // Create an instance
             $instance->fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days);
+            $instance->fetchEarnedLeaveBalance($leave_id,  $userID, $number_of_days);
             $content = "The leave you have applied for has been approved.";
         
             Mail::to($Approvalrecipient)->send(new LeaveApprovedMail($user, $content));
@@ -300,7 +310,7 @@ class LeaveApprovalResource extends Resource
 
     public function fetchCasualLeaveBalance($leave_id,  $userID, $number_of_days)
     {
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         
         // $totalAppliedDays = applied_leave::where('user_id', $userID)
         // ->where('leave_id', $leave_id)
@@ -312,7 +322,7 @@ class LeaveApprovalResource extends Resource
         $leavePolicyId = LeavePolicy::where('leave_id', $leave_id)->value('id');
 
         $leaveRule = LeaveRule::where('policy_id', $leavePolicyId)
-        ->where('grade_step_id', $user->grade_step_id)
+        ->where('grade_id', $user->grade_id)
         ->first();
 
         if (!$leaveRule) {
@@ -345,6 +355,54 @@ class LeaveApprovalResource extends Resource
             ]);
         }
     }
+    public function fetchEarnedLeaveBalance($leave_id,  $userID, $number_of_days)
+    {
+        $user = FilamentUser::where('id', $userID)->first();
+        
+        // $totalAppliedDays = applied_leave::where('user_id', $userID)
+        // ->where('leave_id', $leave_id)
+        // ->where('status', 'approved')
+        // ->sum('number_of_days');
+        $totalAppliedDays = $number_of_days;
+        $leavetype = LeaveType::where('id', $leave_id)->first();
+
+        $leavePolicyId = LeavePolicy::where('leave_id', $leave_id)->value('id');
+
+        $leaveRule = LeaveRule::where('policy_id', $leavePolicyId)
+        ->where('grade_id', $user->grade_id)
+        ->first();
+        //dd($leaveRule);
+
+        if (!$leaveRule) {
+            return redirect()->back()->with('error', 'Leave rule not found');
+        }
+
+        $leaveDuration = $leaveRule->duration;
+
+        // 3. Calculate the leave balance by subtracting the applied days from the leave duration
+      
+        // $leaveBalanceNow = $leaveDuration - $totalAppliedDays;
+
+        $leaveBalanceRecord = LeaveBalance::where('Employee_id', $userID)
+        ->first();
+
+        if ($leaveBalanceRecord) {
+            if($leavetype->name === 'Earned Leave'){
+                $leaveBalanceNow = ($leaveBalanceRecord->earned_leave_balance) - $totalAppliedDays;
+                $leaveBalanceRecord->earned_leave_balance = $leaveBalanceNow;
+                $leaveBalanceRecord->save();
+            }
+            // Update the existing leave balance record
+        
+        } else {
+           
+            // Create a new leave balance record if it doesn't exist
+            LeaveBalance::create([
+                'user_id' => $userID, 
+                'earned_leave_balance' => $leaveBalanceNow,
+            ]);
+        }
+    }
 
     public static function RejectLeave($record) {
         $id = $record->applied_leave_id;
@@ -354,7 +412,7 @@ class LeaveApprovalResource extends Resource
 
         $userID = $leaveApplication->employee_id;
  
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = LeaveApprovalRule::where('type_id', $expense_id)->value('id');
@@ -365,7 +423,7 @@ class LeaveApprovalResource extends Resource
 
         $leaveApplication = AppliedLeave::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead = MasEmployee::where('department_id', $departmentId)
+        $departmentHead = FilamentUser::where('department_id', $departmentId)
         ->where('is_departmentHead', true)
         ->first();
 

@@ -57,6 +57,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | This is the URL that Filament will redirect the user to when they click
+
     | on the sidebar's header.
     |
     */
@@ -87,7 +88,8 @@ return [
     'auth' => [
         'guard' => env('FILAMENT_AUTH_GUARD', 'filament'),
         'pages' => [
-            'login' => \Chiiya\FilamentAccessControl\Http\Livewire\Login::class,
+            'login' => App\Filament\Pages\Login:: class,
+            // \Chiiya\FilamentAccessControl\Http\Livewire\Login::class,
         ],
     ],
 

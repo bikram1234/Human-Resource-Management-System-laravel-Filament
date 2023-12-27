@@ -10,6 +10,8 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\MasEmployee;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
 
 class LevelsRelationManager extends RelationManager
 {
@@ -37,7 +39,7 @@ class LevelsRelationManager extends RelationManager
             
             Forms\Components\Select::make('emp_id')
             ->options(
-                MasEmployee::all()->pluck('name', 'id')->toArray()
+                FilamentUser::all()->pluck('name', 'id')->toArray()
             )
             ->visible(function(callable $get){
                 if(in_array((string)$get('value'),["MM", "HR", "FH"])){

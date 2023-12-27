@@ -28,10 +28,14 @@ class AppliedLeaveResource extends Resource
 {
     protected static ?string $model = AppliedLeave::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
-    public static ?string $label = 'Apply Leave';
+    protected static ?string $navigationLabel = 'Apply';
+    protected static ?string $pluralModelLabel = 'Applied Leave List';
+
     protected static ?string $navigationGroup = 'Leave';
+    protected static ?string $modelLabel = 'Leave Request';
+
     protected static ?int $navigationSort = 3;
 
 
@@ -95,7 +99,7 @@ class AppliedLeaveResource extends Resource
                         $leavePolicyId = LeavePolicy::where('leave_id', [$state])->value('id');
 
                         $leaveRule = LeaveRule::where('policy_id', $leavePolicyId)
-                        ->where('grade_step_id', auth()->user()->grade_step_id)
+                        ->where('grade_id', auth()->user()->grade_id)
                         ->first();
 
                         if($leaveRule) {
@@ -320,7 +324,10 @@ class AppliedLeaveResource extends Resource
                 Action::make('Download')
                 ->action(fn (AppliedLeave $record) => AppliedLeaveResource::downloadFile($record))
                 ->icon('heroicon-s-download')
-                ->iconPosition('before'),
+                ->iconPosition('before')
+                ->hidden(function ( AppliedLeave $record) {
+                    return $record->file_path === null;
+                })
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

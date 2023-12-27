@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Support\Facades\Log;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
 
 
 
@@ -36,7 +38,7 @@ class TransferClaim extends Model
     ];
     public function user()
     {
-        return $this->belongsTo(MasEmployee::class,'user_id');
+        return $this->belongsTo(FilamentUser::class,'user_id');
     }
     public function expenseType()
     {

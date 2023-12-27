@@ -165,4 +165,4 @@ class AppliedEncashmentResource extends Resource
             'edit' => Pages\EditAppliedEncashment::route('/{record}/edit'),
         ];
     }    
-}
+

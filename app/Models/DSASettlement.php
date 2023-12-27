@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
 
 
 
@@ -43,7 +45,7 @@ class DSASettlement extends Model
 
     public function user()
     {
-        return $this->belongsTo(MasEmployee::class,'user_id');
+        return $this->belongsTo(FilamentUser::class,'user_id');
     }
     public function advance()
     {
@@ -69,7 +71,7 @@ class DSASettlement extends Model
 
         static::created(function ($leave) {
             // Set the casual_leave_balance based on the matched LeaveRule
-            $leave->ExpenseApproval()->create([
+            $leave->DSAApproval()->create([
                 'applied_expense_id' => $leave->id
             ]);
         });

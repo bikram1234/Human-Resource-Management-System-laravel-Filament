@@ -22,6 +22,8 @@ use App\Mail\NoDueSectionMail;
 use App\Mail\NoDueApproveMail;
 use Illuminate\Support\Facades\Mail;
 use Filament\Notifications\Notification;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
 
 
 
@@ -30,7 +32,7 @@ class NodueapprovalResource extends Resource
 {
     protected static ?string $model = Nodueapproval::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-check-circle';
     protected static ?string $navigationGroup = 'No Due';
     protected static ?string $navigationLabel = 'Approval';
 
@@ -55,7 +57,7 @@ class NodueapprovalResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('user.name'),
                 Tables\Columns\TextColumn::make('date'),
-                Tables\Columns\TextColumn::make('nodue.reason')->label("Reason"),
+                // Tables\Columns\TextColumn::make('nodue.reason')->label("Reason"),
                 Tables\Columns\TextColumn::make('nodue.status')->label("Status"),
                 
             ])
@@ -95,13 +97,13 @@ class NodueapprovalResource extends Resource
             //
         ];
     }
-    public function widgets(): array
-    {
-        return [
-            // Other widgets...
-            LatestApproval::class,
-        ];
-    }
+    // public function widgets(): array
+    // {
+    //     return [
+    //         // Other widgets...
+    //         LatestApproval::class,
+    //     ];
+    // }
     
     public static function getPages(): array
     {
@@ -113,11 +115,12 @@ class NodueapprovalResource extends Resource
         $id = $record->id;
         $user_id = $record->user_id;
         $currentUser = auth()->user();
-        $sectionhead = $currentUser->is_sectionHead;
-        $departmenthead = $currentUser->is_departmentHead;
+        $sectionhead = $currentUser->hasRole('Section Head');
+        //dd($sectionhead);
+        $departmenthead = $currentUser->hasRole('Department Head');
      
         // Find the user associated with the record
-        $recordUser = MasEmployee::findOrFail($user_id);
+        $recordUser = FilamentUser::findOrFail($user_id);
      
         // Check if the current user is in the same department as the record user
         // if ($currentUser->department_id != $recordUser->department_id) {
@@ -130,9 +133,17 @@ class NodueapprovalResource extends Resource
             $sections = Department::find($departmentID)->sections;
         
             // Collect section head IDs within the department
-            $sectionHeadIDs = $sections->flatMap(function ($section) {
-                return $section->users()->where('is_sectionHead', true)->pluck('id')->toArray();
+            // $sectionHeadIDs = $sections->flatMap(function ($section) {
+            //     return $section->users()->where('is_sectionHead', true)->pluck('id')->toArray();
+            // })->unique();
+            $roleName = 'Section Head';
+            $sectionHeadIDs = $sections->flatMap(function ($section) use ($roleName) {
+                return $section->users()
+                    ->whereHas('roles', fn ($query) => $query->where('name', $roleName))
+                    ->pluck('id')
+                    ->toArray();
             })->unique();
+           //dd($sectionHeadIDs);
         
             if ($sectionHeadIDs->contains($currentUser->id)) {
                 // Check if the current user has already approved
@@ -160,8 +171,15 @@ class NodueapprovalResource extends Resource
                     $approval->status1 = 'approved';
                     $approval->save();
                     $departments = Department::all();
-                    $departmentHeads = $departments->flatMap(function ($department) {
-                        return $department->users()->where('is_departmentHead', true)->get(); // Fetch user objects, not just IDs
+                    // $departmentHeads = $departments->flatMap(function ($department) {
+                    //     return $department->users()->where('is_departmentHead', true)->get(); // Fetch user objects, not just IDs
+                    // })->unique();
+                    $roleName = 'Department Head';
+
+                    $departmentHeads = $departments->flatMap(function ($department) use ($roleName) {
+                        return $department->users()
+                            ->whereHas('roles', fn ($query) => $query->where('name', $roleName))
+                            ->get();
                     })->unique();
                     
                     // Send email to each department head
@@ -176,7 +194,7 @@ class NodueapprovalResource extends Resource
                         // Create a new instance of NoDueMail for each department head
                         Mail::to($recipient)->send(new NoDueSectionMail($department,$user ));
                     }
-                    dd("All department heads have approved");
+                    dd("All Section heads have approved");
 
 
 
@@ -201,10 +219,18 @@ class NodueapprovalResource extends Resource
             $departments = Department::all();
         
             // Collect department head IDs within the department
-            $departmentHeadIDs = $departments->flatMap(function ($department) {
-                return $department->users()->where('is_departmentHead', true)->pluck('id')->toArray();
+            // $departmentHeadIDs = $departments->flatMap(function ($department) {
+            //     return $department->users()->where('is_departmentHead', true)->pluck('id')->toArray();
+            // })->unique();
+            $role = 'Department Head';
+
+            $departmentHeadIDs = $departments->flatMap(function ($department) use ($role) {
+                return $department->users()
+                    ->whereHas('roles', fn ($query) => $query->where('name', $role))
+                    ->pluck('id')
+                    ->toArray();
             })->unique();
-           // dd($departmentHeadIDs );
+            //dd($departmentHeadIDs );
         
             // Check if the current user is a valid department head
             if ($departmentHeadIDs->contains($currentUser->id)) {

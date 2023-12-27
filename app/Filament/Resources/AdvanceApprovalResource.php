@@ -22,13 +22,18 @@ use App\Models\ApplyAdvance;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Level;
 use App\Models\MasEmployee;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
 
 class AdvanceApprovalResource extends Resource
 {
     protected static ?string $model = AdvanceApproval::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-check-circle';
     protected static ?string $navigationGroup = 'Advance/Loan';
+    protected static ?string $navigationLabel = 'Approval';
+    protected static ?string $pluralModelLabel = 'Advance Approval List';
+
     protected static ?int $navigationSort = 3;
 
 
@@ -102,13 +107,13 @@ class AdvanceApprovalResource extends Resource
             //
         ];
     }
-    public function widgets(): array
-    {
-        return [
-            // Other widgets...
-            LatestApproval::class,
-        ];
-    }
+    // public function widgets(): array
+    // {
+    //     return [
+    //         // Other widgets...
+    //         LatestApproval::class,
+    //     ];
+    // }
     
     public static function getPages(): array
     {
@@ -123,7 +128,7 @@ class AdvanceApprovalResource extends Resource
         $expense_id = $ExpenseApplication->advance_type_id;
         $userID = $ExpenseApplication->user_id;
  
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = AdvanceApprovalRule::where('type_id', $expense_id)->value('id');
@@ -134,8 +139,8 @@ class AdvanceApprovalResource extends Resource
 
         $leaveApplication = ApplyAdvance::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead = MasEmployee::where('department_id', $departmentId)
-        ->where('is_departmentHead', true)
+        $departmentHead =FilamentUser::where('section_id', $departmentId)
+        ->whereHas('roles', fn ($query) => $query->where('name', 'Department Head'))
         ->first();
 
         if($approvalType->approval_type === "Hierarchy"){
@@ -224,7 +229,7 @@ class AdvanceApprovalResource extends Resource
                     // Access the 'value' field from the level record
                     $levelValue = $levelRecord->value;
                     $userID = $levelRecord->emp_id;
-                    $approval = MasEmployee::where('id', $userID)->first();
+                    $approval = FilamentUser::where('id', $userID)->first();
                     // Determine the recipient based on the levelValue
                     $recipient = $approval->email;
     
@@ -280,7 +285,7 @@ class AdvanceApprovalResource extends Resource
 
         $userID = $ExpenseApplication->user_id;
  
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = AdvanceApprovalRule::where('type_id', $expense_id)->value('id');
@@ -291,7 +296,7 @@ class AdvanceApprovalResource extends Resource
 
         $leaveApplication = ApplyAdvance::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead = MasEmployee::where('department_id', $departmentId)
+        $departmentHead = FilamentUser::where('department_id', $departmentId)
         ->where('is_departmentHead', true)
         ->first();
 

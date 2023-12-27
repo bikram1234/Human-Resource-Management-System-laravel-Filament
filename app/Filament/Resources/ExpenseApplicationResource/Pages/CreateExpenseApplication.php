@@ -11,6 +11,8 @@ use App\Mail\ExpenseApplicationMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\MasEmployee;
 use App\Models\ExpenseApprovalCondition;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
 
 class CreateExpenseApplication extends CreateRecord
 {
@@ -20,8 +22,11 @@ class CreateExpenseApplication extends CreateRecord
     {
         $currentUser = auth()->user();
         $sectionId = auth()->user()->section_id;
-        $sectionHead = MasEmployee::where('section_id', $sectionId)
-        ->where('is_sectionHead', true)->first();
+        // $sectionHead = MasEmployee::where('section_id', $sectionId)
+        // ->where('is_sectionHead', true)->first();
+        $sectionHead = FilamentUser::where('section_id', $sectionId)
+        ->whereHas('roles', fn ($query) => $query->where('name', 'Section Head'))
+        ->first();
        
         $expense_id = $data['expense_type_id'];
         $approvalRuleId = ExpenseApprovalRule::where('type_id', $expense_id)->value('id');

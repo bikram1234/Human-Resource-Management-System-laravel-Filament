@@ -22,13 +22,18 @@ use App\Models\Level;
 use App\Models\MasEmployee;
 use App\Models\TransferClaim;
 use Filament\Tables\Actions\Action;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
+
 
 class TransferClaimApprovalResource extends Resource
 {
     protected static ?string $model = TransferClaimApproval::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-check-circle';
     protected static ?string $navigationGroup = 'Expense';
+    protected static ?string $navigationLabel = 'Transfer Claim Approval';
+
+    protected static ?string $pluralModelLabel = 'Transfer Claim Approval List';
     protected static ?int $navigationSort = 9;
 
 
@@ -106,13 +111,13 @@ class TransferClaimApprovalResource extends Resource
             //
         ];
     }
-    public function widgets(): array
-    {
-        return [
-            // Other widgets...
-            LatestApproval::class,
-        ];
-    }
+    // public function widgets(): array
+    // {
+    //     return [
+    //         // Other widgets...
+    //         LatestApproval::class,
+    //     ];
+    // }
     
     public static function getPages(): array
     {
@@ -128,7 +133,7 @@ class TransferClaimApprovalResource extends Resource
         $expense_id = $ExpenseApplication->expense_type_id;
         $userID = $ExpenseApplication->user_id;
  
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = ExpenseApprovalRule::where('type_id', $expense_id)->value('id');
@@ -139,8 +144,8 @@ class TransferClaimApprovalResource extends Resource
 
         $leaveApplication = TransferClaim::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead = MasEmployee::where('department_id', $departmentId)
-        ->where('is_departmentHead', true)
+        $departmentHead =FilamentUser::where('section_id', $departmentId)
+        ->whereHas('roles', fn ($query) => $query->where('name', 'Department Head'))
         ->first();
 
         if($approvalType->approval_type === "Hierarchy"){
@@ -229,7 +234,7 @@ class TransferClaimApprovalResource extends Resource
                     // Access the 'value' field from the level record
                     $levelValue = $levelRecord->value;
                     $userID = $levelRecord->emp_id;
-                    $approval = MasEmployee::where('id', $userID)->first();
+                    $approval = FilamentUser::where('id', $userID)->first();
                     // Determine the recipient based on the levelValue
                     $recipient = $approval->email;
     
@@ -285,7 +290,7 @@ class TransferClaimApprovalResource extends Resource
 
         $userID = $ExpenseApplication->user_id;
  
-        $user = MasEmployee::where('id', $userID)->first();
+        $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
 
         $approvalRuleId = ExpenseApprovalRule::where('type_id', $expense_id)->value('id');
@@ -296,7 +301,7 @@ class TransferClaimApprovalResource extends Resource
 
         $leaveApplication = TransferClaim::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead = MasEmployee::where('department_id', $departmentId)
+        $departmentHead = FilamentUser::where('department_id', $departmentId)
         ->where('is_departmentHead', true)
         ->first();
 

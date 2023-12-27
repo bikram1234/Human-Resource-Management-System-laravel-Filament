@@ -15,7 +15,7 @@ class LeaveRule extends Model
 
     protected $fillable = [
         "policy_id",
-        "grade_step_id",
+        "grade_id",
         "duration",
         "uom",
         "start_date",
@@ -32,8 +32,8 @@ class LeaveRule extends Model
         return $this->belongsTo(LeavePolicy::class, 'policy_id');
     }
 
-    public function gradeStep() {
-        return $this->belongsTo(MasGradeStep::class, 'grade_step_id');
+    public function grade() {
+        return $this->belongsTo(MasGrade::class, 'grade_id');
     }
 
     public function leaves()

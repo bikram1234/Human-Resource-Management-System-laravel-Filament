@@ -18,7 +18,7 @@ class SectionResource extends Resource
 {
     protected static ?string $model = Section::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-library';
 
     protected static ?string $navigationGroup = 'Work-Structure';
 
@@ -30,6 +30,7 @@ class SectionResource extends Resource
                 ->options(
                     Department::all()->pluck('name', 'id')->toArray()
                 )
+                ->label("Department")
                 ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
