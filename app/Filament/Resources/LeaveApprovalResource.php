@@ -106,13 +106,13 @@ class LeaveApprovalResource extends Resource
             ]);
     }
 
-    public function widgets(): array
-    {
-        return [
-            // Other widgets...
-            LatestApproval::class,
-        ];
-    }
+    // public function widgets(): array
+    // {
+    //     return [
+    //         // Other widgets...
+    //         LatestApproval::class,
+    //     ];
+    // }
         
     public static function getRelations(): array
     {

@@ -12,7 +12,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+            $schedule->command('leave:increment-earned-leave')
+                    ->monthly();
+                    // ->everyFiveSeconds();	
+    
+            $schedule->command('leave:year-end-process')
+                    //->everyFiveSeconds();
+                    ->yearlyOn(12, 31, '23:59'); 
     }
 
     /**
