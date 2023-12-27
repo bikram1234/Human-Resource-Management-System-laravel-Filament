@@ -399,7 +399,7 @@ class LeaveApprovalResource extends Resource
             // Create a new leave balance record if it doesn't exist
             LeaveBalance::create([
                 'user_id' => $userID, 
-                'casual_leave_balance' => $leaveBalanceNow,
+                'earned_leave_balance' => $leaveBalanceNow,
             ]);
         }
     }

@@ -11,13 +11,6 @@ use Illuminate\Database\Eloquent\Builder;
 class ListEncashmentApprovals extends ListRecords
 {
     protected static string $resource = EncashmentApprovalResource::class;
-
-    protected function getActions(): array
-    {
-        return [
-            Actions\CreateAction::make(),
-        ];
-    }
     protected function getTableQuery(): Builder
     {
 

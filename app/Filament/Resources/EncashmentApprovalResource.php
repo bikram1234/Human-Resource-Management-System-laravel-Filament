@@ -23,6 +23,8 @@ use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use Filament\Tables\Actions\Action;
 use App\Models\LeaveEncashmentApprovalCondition;
 use App\Models\LeaveEncashmentApprovalRule;
+use App\Models\LeaveBalance;
+
 
 
 
@@ -114,7 +116,8 @@ class EncashmentApprovalResource extends Resource
     
     public static function ApproveEncashment($record) {
         $id = $record->applied_encashment_id;
-        $ExpenseApplication = AppliedEncashment::findOrFail($id);
+        $EncashmentApplication = AppliedEncashment::findOrFail($id);
+        $number_of_days = $EncashmentApplication->number_of_days;
         $Encashment = encashment:: Where('name','Leave Encashment')->first();
         if ($Encashment) {
             $EncashmentId = $Encashment->id;
@@ -124,7 +127,7 @@ class EncashmentApprovalResource extends Resource
             echo "Encashment  with the name 'Leave Encashment' not found.";
         }
         //$expense_id = $ExpenseApplication->expense_type_id;
-        $userID = $ExpenseApplication->user_id;
+        $userID = $EncashmentApplication->user_id;
  
         $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
@@ -153,7 +156,8 @@ class EncashmentApprovalResource extends Resource
                 $leaveApplication->update([
                     'status' => 'approved',
                 ]);
-             
+                $instance = new self(); // Create an instance
+                $instance->fetchEarnedLeaveBalance($userID, $number_of_days);
                 $content = "Leave Encashment has been approved.";
             
                 Mail::to($Approvalrecipient)->send(new LeaveEncashmentApprovalMail($user, $content));
@@ -207,7 +211,9 @@ class EncashmentApprovalResource extends Resource
                 $leaveApplication->update([
                     'status' => 'approved',
                 ]);
-    
+
+                $instance = new self(); // Create an instance
+                $instance->fetchEarnedLeaveBalance($userID, $number_of_days);
                 $content = "Leave Encashment has been approved.";
                 Mail::to($Approvalrecipient)->send(new LeaveEncashmentApprovalMail($user, $content));
             
@@ -247,7 +253,8 @@ class EncashmentApprovalResource extends Resource
                 $leaveApplication->update([
                     'status' => 'approved',
                 ]);
-
+                $instance = new self(); // Create an instance
+                $instance->fetchEarnedLeaveBalance($userID, $number_of_days);
                 $content = "Leave Encashment has been approved.";
                 
                 Mail::to($Approvalrecipient)->send(new LeaveEncashmentApprovalMail($user, $content));
@@ -274,7 +281,26 @@ class EncashmentApprovalResource extends Resource
         }
        
 
-    } 
+    }
+    public function fetchEarnedLeaveBalance( $userID, $number_of_days)
+    {
+        $user = FilamentUser::where('id', $userID)->first();
+
+        $totalAppliedDays = $number_of_days;
+      
+        // $leaveBalanceNow = $leaveDuration - $totalAppliedDays;
+
+        $leaveBalanceRecord = LeaveBalance::where('Employee_id', $userID)
+        ->first();
+
+        if ($leaveBalanceRecord) {
+                $leaveBalanceNow = ($leaveBalanceRecord->earned_leave_balance) - $totalAppliedDays;
+                $leaveBalanceRecord->earned_leave_balance = $leaveBalanceNow;
+                $leaveBalanceRecord->save();
+            // Update the existing leave balance record
+        
+        } 
+    }
     public static function RejectEncashment($record) {
         $id = $record->applied_encashment_id;
         $ExpenseApplication = AppliedEncashment::findOrFail($id);
