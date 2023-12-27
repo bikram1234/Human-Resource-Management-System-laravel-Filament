@@ -35,6 +35,7 @@ class TimeZoneResource extends Resource
                 ->options(
                     Country::all()->pluck('name', 'id')->toArray()
                 )
+                ->label("Country")
                 ->required(),
                 Forms\Components\TextInput::make('timezone')
                     ->required()
@@ -56,10 +57,6 @@ class TimeZoneResource extends Resource
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\IconColumn::make('status')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
             ])
             ->filters([
                 //

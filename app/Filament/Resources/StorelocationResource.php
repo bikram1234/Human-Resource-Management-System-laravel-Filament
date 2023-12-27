@@ -37,11 +37,13 @@ class StorelocationResource extends Resource
                 ->options(
                     Dzongkhag::all()->pluck('name', 'id')->toArray()
                 )
+                ->label("Dzongkhag")
                 ->required(),
                 Forms\Components\Select::make('timezone_id')
                 ->options(
                     TimeZone::all()->pluck('name', 'id')->toArray()
                 )
+                ->label("Time Zone")
                 ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
@@ -62,10 +64,6 @@ class StorelocationResource extends Resource
                 Tables\Columns\TextColumn::make('timezone.name'),  
                 Tables\Columns\IconColumn::make('status')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
             ])
             ->filters([
                 //

@@ -30,6 +30,7 @@ class SectionResource extends Resource
                 ->options(
                     Department::all()->pluck('name', 'id')->toArray()
                 )
+                ->label("Department")
                 ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required()
