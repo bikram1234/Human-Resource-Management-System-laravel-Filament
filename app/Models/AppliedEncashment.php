@@ -44,3 +44,4 @@ class AppliedEncashment extends Model
     {
         return $ownerRecord->status === 'approved';
     }}
+    }}

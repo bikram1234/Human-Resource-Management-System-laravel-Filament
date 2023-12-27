@@ -14,6 +14,9 @@ class Kernel extends ConsoleKernel
     {
             $schedule->command('leave:increment-earned-leave')
                     ->monthly();
+
+                    // ->everyFiveSeconds();	
+
     
             $schedule->command('leave:year-end-process')
                     //->everyFiveSeconds();

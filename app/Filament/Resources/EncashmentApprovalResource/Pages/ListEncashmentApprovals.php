@@ -37,4 +37,5 @@ class ListEncashmentApprovals extends ListRecords
 
     return $query;
     }
+
 }
