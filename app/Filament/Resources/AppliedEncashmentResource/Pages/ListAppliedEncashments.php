@@ -24,4 +24,4 @@ class ListAppliedEncashments extends ListRecords
      $query = parent::getTableQuery()->whereuser_id(Auth::id());
      return $query;
     }
-}
+

@@ -48,4 +48,5 @@ class EncashmentApprovalPolicy
     {
         return $user->can('EncashmentApproval.delete');
     }
+
 }

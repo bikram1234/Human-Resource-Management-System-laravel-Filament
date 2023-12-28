@@ -118,6 +118,7 @@ class EncashmentApprovalResource extends Resource
         $id = $record->applied_encashment_id;
         $EncashmentApplication = AppliedEncashment::findOrFail($id);
         $number_of_days = $EncashmentApplication->number_of_days;
+        $ExpenseApplication = AppliedEncashment::findOrFail($id);
         $Encashment = encashment:: Where('name','Leave Encashment')->first();
         if ($Encashment) {
             $EncashmentId = $Encashment->id;
@@ -128,6 +129,7 @@ class EncashmentApprovalResource extends Resource
         }
         //$expense_id = $ExpenseApplication->expense_type_id;
         $userID = $EncashmentApplication->user_id;
+        $userID = $ExpenseApplication->user_id;
  
         $user = FilamentUser::where('id', $userID)->first();
         $Approvalrecipient = $user->email;
@@ -158,6 +160,7 @@ class EncashmentApprovalResource extends Resource
                 ]);
                 $instance = new self(); // Create an instance
                 $instance->fetchEarnedLeaveBalance($userID, $number_of_days);
+             
                 $content = "Leave Encashment has been approved.";
             
                 Mail::to($Approvalrecipient)->send(new LeaveEncashmentApprovalMail($user, $content));
@@ -214,6 +217,7 @@ class EncashmentApprovalResource extends Resource
 
                 $instance = new self(); // Create an instance
                 $instance->fetchEarnedLeaveBalance($userID, $number_of_days);
+    
                 $content = "Leave Encashment has been approved.";
                 Mail::to($Approvalrecipient)->send(new LeaveEncashmentApprovalMail($user, $content));
             
@@ -255,6 +259,7 @@ class EncashmentApprovalResource extends Resource
                 ]);
                 $instance = new self(); // Create an instance
                 $instance->fetchEarnedLeaveBalance($userID, $number_of_days);
+
                 $content = "Leave Encashment has been approved.";
                 
                 Mail::to($Approvalrecipient)->send(new LeaveEncashmentApprovalMail($user, $content));
@@ -301,6 +306,7 @@ class EncashmentApprovalResource extends Resource
         
         } 
     }
+    } 
     public static function RejectEncashment($record) {
         $id = $record->applied_encashment_id;
         $ExpenseApplication = AppliedEncashment::findOrFail($id);
@@ -366,4 +372,5 @@ class EncashmentApprovalResource extends Resource
 
     } 
 
+}
 }
