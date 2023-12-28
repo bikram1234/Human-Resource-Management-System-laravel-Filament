@@ -68,4 +68,4 @@ class CreateAppliedEncashment extends CreateRecord
         return $data;
      
     } 
-
+}

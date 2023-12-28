@@ -25,5 +25,5 @@ class AppliedEncashmentPolicy
         {
             return $user->designation_id === 3; // Replace 3 with the actual designation_id for Management
         }
-}
+
 }

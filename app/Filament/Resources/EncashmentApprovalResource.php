@@ -306,7 +306,7 @@ class EncashmentApprovalResource extends Resource
         
         } 
     }
-    } 
+     
     public static function RejectEncashment($record) {
         $id = $record->applied_encashment_id;
         $ExpenseApplication = AppliedEncashment::findOrFail($id);
@@ -367,10 +367,10 @@ class EncashmentApprovalResource extends Resource
             ->title('Leave Encashment rejected successfully')
             ->success()
             ->send();
+        
         }
        
 
     } 
+}
 
-}
-}
