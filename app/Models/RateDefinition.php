@@ -21,9 +21,4 @@ class RateDefinition extends Model
     {
         return $this->belongsTo(Policy::class);
     }
-
-    public function rateLimits()
-    {
-        return $this->hasMany(RateLimit::class);
-    }
 }

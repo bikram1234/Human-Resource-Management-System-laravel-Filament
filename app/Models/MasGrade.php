@@ -23,6 +23,10 @@ class MasGrade extends Model
     public function gradeSteps(): HasMany{
         return $this->hasMany(MasGradeStep::class,'grade_id');
     }
+    public function rateLimit()
+    {
+        return $this->hasMany(RateLimit::class, 'grade');
+    }
 
     protected static function boot()
     {

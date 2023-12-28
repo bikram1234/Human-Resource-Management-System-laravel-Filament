@@ -28,6 +28,7 @@ class RateLimitsRelationManager extends RelationManager
             ->options(
                 MasGrade::all()->pluck('name', 'id')->toArray()
             )
+            ->multiple()
             ->required(),
             Forms\Components\Select::make('region')
             ->options(
@@ -53,9 +54,11 @@ class RateLimitsRelationManager extends RelationManager
         return $table
             ->columns([
     
-                Tables\Columns\TextColumn::make('gradeName.name'),
+                Tables\Columns\TextColumn::make('gradeName.name')
+                ->label("Grade"),
     
-                Tables\Columns\TextColumn::make('Regionname.name'),
+                Tables\Columns\TextColumn::make('Regionname.name')
+                ->label("Region"),
     
                 Tables\Columns\TextColumn::make('limit_amount'),
     

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class RateLimit extends Model
 {
@@ -36,6 +37,75 @@ class RateLimit extends Model
 
      public function regionname()
      {
-     return $this->belongsTo(region::class, 'region'); // 'grade' is the foreign key in RateLimit
+     return $this->belongsTo(region::class, 'region'); // 'region' is the foreign key in RateLimit
      }
+
+     protected $isProcessingCreatingEvent = false;
+
+    // Add the attribute to the $hidden array to make it non-persistent
+    protected $hidden = ['isProcessingCreatingEvent'];
+
+     protected static function boot()
+     {
+         parent::boot();
+     
+         static::creating(function ($model) {
+             // Check if the event is already being processed to avoid infinite loop
+             if ($model->isProcessingCreatingEvent) {
+                $model->id = Str::uuid(); // Generate a new UUID for the duplicated model
+                 return;
+             }
+     
+             info('Creating event fired');
+     
+             $originalGrade = $model->grade;
+             $originalGrade = is_string($originalGrade) ? [$originalGrade] : $originalGrade;
+     
+             $originalAttributes = $model->getAttributes();
+             unset($originalAttributes['grade']);
+     
+             info('Original Grade:', $originalGrade);
+             info('Original Attributes:', $originalAttributes);
+     
+             // Set the flag to indicate that the event is being processed
+             $model->isProcessingCreatingEvent = true;
+     
+             foreach ($originalGrade as $gradeId) {
+                 info('Loop start');
+     
+                 try {
+                     $newModel = clone $model;
+                     $newModel->grade = $gradeId;
+     
+                     info('Duplicated Model:', $newModel->toArray());
+     
+                     // Check if the model is new (not saved)
+                     if (!$newModel->exists) {
+                         if ($newModel->save()) {
+                             info("Duplicated model saved: " . json_encode($newModel->toArray()));
+                         } else {
+                             info("Error saving duplicated model. Save returned false. Model: " . json_encode($newModel->toArray()));
+                         }
+                     } else {
+                         info("Duplicated model already exists, skipping.");
+                     }
+                 } catch (\Exception $e) {
+                     info('Exception during loop: ' . $e->getMessage());
+                 }
+     
+                 info('Loop end');
+             }
+     
+             info('Original Model Not Saved');
+     
+             // Reset the flag after processing the event
+             $model->isProcessingCreatingEvent = false;
+     
+             // Prevent the original record from being saved
+             return false;
+         });
+     }
+     
+      
+
 }

@@ -11,6 +11,9 @@ use App\Models\RateDefinition;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\RateLimiter;
+use Livewire\Component as Livewire;
+
 
 class RateDefinitionsRelationManager extends RelationManager
 {
@@ -72,20 +75,21 @@ class RateDefinitionsRelationManager extends RelationManager
         ])
             ->filters([
 
-                //
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                 ->hidden(function ($record) {
-                    // Check if $record is an instance of RateDefinition
-                    if ($record instanceof \App\Models\RateDefinition) {
-                        // Your logic for non-null $record
-                        return true;
-                    } else {
-                        // Handle the case where $record is null
-                        return false; // Or provide an appropriate default behavior
+                    $rate = RateDefinition::all();
+                    $policyRecord = $record;
+                    $policyIDs = $rate->pluck('policy_id')->toArray();
+                
+                    if ($record instanceof Policy && in_array($record->id, $policyIDs)) {
+                        return true; // Hide attributes when the conditions are met
                     }
+                
+                    return false; // Do not hide attributes when $record is null or policy_id is not the same
                 }),
+                
             
             ])
             ->actions([
