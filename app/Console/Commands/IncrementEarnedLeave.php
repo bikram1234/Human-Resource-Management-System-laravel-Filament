@@ -51,18 +51,24 @@ class IncrementEarnedLeave extends Command
                                 $leaveRules = $leavePolicy->leaveRules;
     
                                 foreach ($leaveRules as $leaveRule) {
-                                    $duration = $leaveRule->duration;
-    
-                                    if ($user->leaveBalance) {
-                                        $user->leaveBalance->increment('earned_leave_balance', $duration);
-                                        // Add log statement
-                                      info("User ID: {$user->id}, Incremented earned leave by $duration days.");
-
-
+                                    $ruleGradeId = $leaveRule->grade_id;
+                                    $ruleEmploymentType = $leaveRule->employee_type;
+                                
+                                    // Check if the LeaveRule's grade_id and employment_type match the user's grade_id and employment_type
+                                    if ($user->grade_id === $ruleGradeId && $user->employment_type === $ruleEmploymentType) {
+                                        $duration = $leaveRule->duration;
+                                
+                                        if ($user->leaveBalance) {
+                                            $user->leaveBalance->increment('earned_leave_balance', $duration);
+                                            info("User ID: {$user->id}, Incremented earned leave by $duration days.");
+                                        } else {
+                                            info("User ID: {$user->id}, Missing Leave Balance for Earned Leave.");
+                                        }
                                     } else {
-                                        // Add log statement for missing leave balance
-                                        info("User ID: {$user->id}, Missing Leave Balance for Earned Leave.");
+                                        // Add log statement for conditions not met
+                                        info("User ID: {$user->id}, LeaveRule conditions not met for grade_id: {$ruleGradeId}, employment_type: {$ruleEmploymentType}.");
                                     }
+                                
                                 }
                             }
                         } else {

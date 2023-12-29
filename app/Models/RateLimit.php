@@ -104,8 +104,25 @@ class RateLimit extends Model
              // Prevent the original record from being saved
              return false;
          });
+
+         static::saving(function ($model) {
+            $grade = $model->grade;
+            $region = $model->region;
+            $policyId = $model->policy_id;
+
+            // Check if a record with the same grade, region, and policy_id already exists
+            $existingRecord = self::where(function ($query) use ($grade, $region, $policyId) {
+                $query->where('grade', $grade)
+                    ->where('region', $region)
+                    ->where('policy_id', $policyId);
+            })->first();
+
+            if ($existingRecord) {
+                // Record with the same grade, region, and policy_id already exists, prevent saving
+                throw new \Exception("Record with the same grade, region, and policy_id already exists.");
+            }
+        });
      }
-     
-      
+
 
 }

@@ -12,7 +12,8 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\RateLimiter;
-use Livewire\Component as Livewire;
+use App\Filament\Resources\PolicyResource\Pages;
+
 
 
 class RateDefinitionsRelationManager extends RelationManager
@@ -100,5 +101,5 @@ class RateDefinitionsRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }    
+    }  
 }

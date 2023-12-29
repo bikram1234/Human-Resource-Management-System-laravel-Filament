@@ -25,6 +25,7 @@ class LeaveRulesRelationManager extends RelationManager
             ->options(
                 MasGrade::all()->pluck('name', 'id')->toArray()
             )
+            ->multiple()
             ->required()
             ->label("Grade"),
             Forms\Components\TextInput::make('duration')
