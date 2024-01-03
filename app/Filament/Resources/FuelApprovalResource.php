@@ -21,6 +21,7 @@ use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use App\Models\ExpenseApprovalCondition;
 use App\Models\ExpenseApprovalRule;
 use App\Models\Fuel;
+use App\Models\FuelClaim;
 use Filament\Tables\Actions\Action;
 
 
@@ -65,9 +66,9 @@ class FuelApprovalResource extends Resource
                 ->label("Application date"),
                 Tables\Columns\TextColumn::make('FuelApply.location')
                 ->label("Location"),
-                Tables\Columns\TextColumn::make('FuelApply.vehicle_type')
+                Tables\Columns\TextColumn::make('FuelApply.vehicletype.vehicle_type')
                 ->label("Vehicle"),
-                Tables\Columns\TextColumn::make('FuelApply.vehicle_type')
+                Tables\Columns\TextColumn::make('FuelApply.vehicle.vehicle_mileage')
                 ->label("Mileage"),
                 Tables\Columns\TextColumn::make('FuelApply.status')
                 ->label("Status"),
@@ -127,7 +128,7 @@ class FuelApprovalResource extends Resource
     }  
     public static function ApproveExpense($record) {
         $id = $record->applied_expense_id;
-        $ExpenseApplication = Fuel::findOrFail($id);
+        $ExpenseApplication = FuelClaim::findOrFail($id);
         $expense_id = $ExpenseApplication->expense_type_id;
         $userID = $ExpenseApplication->user_id;
  
@@ -140,7 +141,7 @@ class FuelApprovalResource extends Resource
 
         $hierarchy_id = $approvalType->hierarchy_id;
 
-        $leaveApplication = Fuel::findOrFail($id);
+        $leaveApplication = FuelClaim::findOrFail($id);
         $departmentId = $user->department_id;
         $departmentHead =FilamentUser::where('section_id', $departmentId)
         ->whereHas('roles', fn ($query) => $query->where('name', 'Department Head'))
@@ -281,7 +282,7 @@ class FuelApprovalResource extends Resource
     } 
     public static function RejectExpense($record) {
         $id = $record->applied_advance_id;
-        $ExpenseApplication = Fuel::findOrFail($id);
+        $ExpenseApplication = FuelClaim::findOrFail($id);
         $remark = $ExpenseApplication->remark;
         $expense_id = $ExpenseApplication->expense_type_id;
 
@@ -296,7 +297,7 @@ class FuelApprovalResource extends Resource
 
         $hierarchy_id = $approvalType->hierarchy_id;
 
-        $leaveApplication = Fuel::findOrFail($id);
+        $leaveApplication = FuelClaim::findOrFail($id);
         $departmentId = $user->department_id;
         $departmentHead = FilamentUser::where('department_id', $departmentId)
         ->where('is_departmentHead', true)

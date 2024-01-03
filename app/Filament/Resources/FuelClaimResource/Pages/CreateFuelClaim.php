@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\FuelResource\Pages;
+namespace App\Filament\Resources\FuelClaimResource\Pages;
 
-use App\Filament\Resources\FuelResource;
+use App\Filament\Resources\FuelClaimResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use App\Models\ExpenseApprovalRule;
@@ -13,10 +13,9 @@ use App\Models\MasEmployee;
 use App\Models\ExpenseApprovalCondition;
 use Chiiya\FilamentAccessControl\Models\FilamentUser;
 
-
-class CreateFuel extends CreateRecord
+class CreateFuelClaim extends CreateRecord
 {
-    protected static string $resource = FuelResource::class;
+    protected static string $resource = FuelClaimResource::class;
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $currentUser = auth()->user();
@@ -57,3 +56,4 @@ class CreateFuel extends CreateRecord
      
     }   
 }
+

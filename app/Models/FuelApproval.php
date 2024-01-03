@@ -27,7 +27,7 @@ class FuelApproval extends Model
     
 
     public function FuelApply() {
-        return $this->belongsTo(Fuel::class, 'applied_expense_id');
+        return $this->belongsTo(FuelClaim::class, 'applied_expense_id');
     }
 
 
@@ -48,3 +48,7 @@ class FuelApproval extends Model
         });
     }
 }
+
+
+
+

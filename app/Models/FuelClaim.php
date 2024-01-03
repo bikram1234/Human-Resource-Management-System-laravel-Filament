@@ -7,10 +7,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Chiiya\FilamentAccessControl\Models\FilamentUser;
-
-
-
-class Fuel extends Model
+class FuelClaim extends Model
 {
     use HasFactory,HasUuids;
     protected $fillable = [
@@ -26,9 +23,6 @@ class Fuel extends Model
         'mileage',
         'rate',
         'amount',
-        'level1',
-        'level2',
-        'level3',
         'status',
         'remark',
         'expense_type_id',
@@ -41,7 +35,11 @@ class Fuel extends Model
     }
     public function vehicle()
     {
-        return $this->belongsTo(AddVehicle::class,'vehicle_no');
+        return $this->belongsTo(VehicleNumber::class,'vehicle_no');
+    }
+    public function vehicletype()
+    {
+        return $this->belongsTo(VehicleType::class,'vehicle_type');
     }
     public function FuelApproval()
     {
@@ -64,6 +62,4 @@ class Fuel extends Model
     {
         return $ownerRecord->status === 'approved';
     }
-
-
 }

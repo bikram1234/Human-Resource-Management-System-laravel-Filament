@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fuels', function (Blueprint $table) {
+        Schema::create('fuel_claims', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->unsignedBigInteger('user_id');
             $table->string('location');
             $table->date('application_date');
+            $table->uuid('vehicle_type');
+            $table->foreign('vehicle_type')->references('id')->on('vehicle_types')->onDelete('cascade');
             $table->uuid('vehicle_no');
-            $table->foreign('vehicle_no')->references('id')->on('add_vehicles')->onDelete('cascade');
-            $table->string('vehicle_type');
+            $table->foreign('vehicle_no')->references('id')->on('vehicle_numbers')->onDelete('cascade');
             $table->date('date');
             $table->string('initial_km');
             $table->string('final_km');
@@ -41,6 +42,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fuels');
+        Schema::dropIfExists('fuel_claims');
     }
 };

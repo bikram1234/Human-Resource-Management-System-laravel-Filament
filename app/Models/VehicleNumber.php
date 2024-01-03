@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class AddVehicle extends Model
+
+class VehicleNumber extends Model
 {
     use HasFactory,HasUuids;
 
@@ -17,4 +18,12 @@ class AddVehicle extends Model
         'status',
  
      ];
+      public function vehicletype()
+    {
+        return $this->belongsTo(VehicleType::class, 'vehicle_type');
     }
+    public function fuel()
+    {
+        return $this->hasMany(FuelClaim::class, 'vehicle_no');
+    }
+}

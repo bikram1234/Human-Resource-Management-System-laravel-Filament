@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Filament\Resources\FuelResource\Pages;
+namespace App\Filament\Resources\FuelClaimResource\Pages;
 
-use App\Filament\Resources\FuelResource;
+use App\Filament\Resources\FuelClaimResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-class ListFuels extends ListRecords
+class ListFuelClaims extends ListRecords
 {
-    protected static string $resource = FuelResource::class;
+    protected static string $resource = FuelClaimResource::class;
 
     protected function getActions(): array
     {

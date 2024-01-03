@@ -10,12 +10,14 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\MasGrade;
+use App\Filament\Resources\CountryResource\Pages;
+
 
 class LeaveRulesRelationManager extends RelationManager
 {
     protected static string $relationship = 'LeaveRules';
 
-    protected static ?string $recordTitleAttribute = 'name';
+    protected static ?string $recordTitleAttribute = 'grade_id';
 
     public static function form(Form $form): Form
     {
@@ -85,5 +87,11 @@ class LeaveRulesRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }    
+    } 
+    public static function getPages(): array
+    {
+        return [
+          
+        ];
+    }     
 }

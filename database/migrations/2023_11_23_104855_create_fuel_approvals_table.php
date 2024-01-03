@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('fuel_approvals', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('applied_expense_id');
-            $table->foreign("applied_expense_id")->references("id")->on("fuels")->onDelete('RESTRICT')->onUpdate('CASCADE');            
+            $table->foreign("applied_expense_id")->references("id")->on("fuel_claims")->onDelete('RESTRICT')->onUpdate('CASCADE');            
             $table->string('level1')->default('pending');
             $table->string('level2')->default('pending');
             $table->string('level3')->default('pending');
