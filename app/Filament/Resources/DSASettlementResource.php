@@ -44,17 +44,7 @@ class DSASettlementResource extends Resource
 
     protected static ?string $modelLabel = 'DSA Request';
 
-
-
-
     protected static ?int $navigationSort = 5;
-
-
-
-
-
-
-
 
     public static function form(Form $form): Form
      {
@@ -263,7 +253,12 @@ class DSASettlementResource extends Resource
                     Forms\Components\TextInput::make('total_days')
                     ->reactive()
                     ->required()
-                    ->numeric(), 
+                    ->numeric()
+                    ->afterStateUpdated(function ($state, Closure $set, $get){
+                        $rule = null;
+                        $set('ta', $rule);
+                        $set('total_amount', $rule);
+                    }), 
                     Forms\Components\TextInput::make('da')
                     ->reactive()
                     ->default($da)
