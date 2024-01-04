@@ -20,43 +20,46 @@ class CreateAppliedLeave extends CreateRecord
     protected static string $resource = AppliedLeaveResource::class;
 
     protected function mutateFormDataBeforeCreate(array $data): array
-{
-    $currentUser = auth()->user();
-    $sectionId = auth()->user()->section_id;
-    // $sectionHead = MasEmployee::where('section_id', $sectionId)
-    // ->where('is_sectionHead', true)->first();
-    $sectionHead = FilamentUser::where('section_id', $sectionId)
-    ->whereHas('roles', fn ($query) => $query->where('name', 'Section Head'))
-    ->first();
-   
-    $leave_id = $data['leave_id'];
-    $approvalRuleId = LeaveApprovalRule::where('type_id', $leave_id)->value('id');
-    $approvalType = LeaveApprovalCondition::where('approval_rule_id', $approvalRuleId)->first();
-    $hierarchy_id = $approvalType->hierarchy_id;
+    {
+        $currentUser = auth()->user();
+        $sectionId = auth()->user()->section_id;
+        // $sectionHead = MasEmployee::where('section_id', $sectionId)
+        // ->where('is_sectionHead', true)->first();
+        $sectionHead = FilamentUser::where('section_id', $sectionId)
+        ->whereHas('roles', fn ($query) => $query->where('name', 'Section Head'))
+        ->first();
+    
+        $leave_id = $data['leave_id'];
+        $approvalRuleId = LeaveApprovalRule::where('type_id', $leave_id)->value('id');
+        $approvalType = LeaveApprovalCondition::where('approval_rule_id', $approvalRuleId)->first();
+        $hierarchy_id = $approvalType->hierarchy_id;
 
-    if ($approvalType->approval_type == "Hierarchy") {
-            // Fetch the record from the levels table based on the $hierarchy_id
-            $levelRecord = Level::where('hierarchy_id', $hierarchy_id)->first();
+        if ($approvalType->approval_type == "Hierarchy") {
+                // Fetch the record from the levels table based on the $hierarchy_id
+                $levelRecord = Level::where('hierarchy_id', $hierarchy_id)->first();
 
-            if ($levelRecord) {
-                // Access the 'value' field from the level record
-                $levelValue = $levelRecord->value;
+                if ($levelRecord) {
+                    // Access the 'value' field from the level record
+                    $levelValue = $levelRecord->value;
 
-                // Determine the recipient based on the levelValue
-                $recipient = '';
+                    // Determine the recipient based on the levelValue
+                    $recipient = '';
 
-                // Check the levelValue and set the recipient accordingly
-                if ($levelValue === "SH") {
-                    // Set the recipient to the section head's email address or user ID
-                    $recipient = $sectionHead->email; // Replace with the actual field name
+                    // Check the levelValue and set the recipient accordingly
+                    if ($levelValue === "SH") {
+                        // Set the recipient to the section head's email address or user ID
+                        $recipient = $sectionHead->email; // Replace with the actual field name
+                    }
+                    $approval = $sectionHead;
+
+                    Mail::to($recipient)->send(new LeaveApplicationMail($approval, $currentUser));
                 }
-                $approval = $sectionHead;
-
-                Mail::to($recipient)->send(new LeaveApplicationMail($approval, $currentUser));
-            }
-        
+            
+        }
+        return $data;
+    
     }
-    return $data;
- 
-}
+    protected function getRedirectUrl(): string{
+        return $this->getResource()::getUrl('index');
+    }
 }

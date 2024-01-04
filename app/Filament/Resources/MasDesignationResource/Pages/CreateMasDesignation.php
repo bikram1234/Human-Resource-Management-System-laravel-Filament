@@ -15,4 +15,7 @@ class CreateMasDesignation extends CreateRecord
         $data['created_by'] = DB::table("users")->whereRaw("email = ?",[auth()->user()->email])->value('id');
         return $data;
     }
+    protected function getRedirectUrl(): string{
+        return $this->getResource()::getUrl('index');
+    }
 }

@@ -56,5 +56,8 @@ class CreateExpenseApplication extends CreateRecord
         }
         return $data;
      
-    }   
+    } 
+    protected function getRedirectUrl(): string{
+        return $this->getResource()::getUrl('index');
+    }  
 }

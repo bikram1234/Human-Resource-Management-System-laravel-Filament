@@ -9,4 +9,7 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateAdvanceType extends CreateRecord
 {
     protected static string $resource = AdvanceTypeResource::class;
+    protected function getRedirectUrl(): string{
+        return $this->getResource()::getUrl('index');
+    }
 }

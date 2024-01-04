@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "barryvdh/laravel-debugbar": "^3.9",
         "chiiya/filament-access-control": "^1.8",
         "doctrine/dbal": "^3.7",
         "filament/filament": "^2.17",
