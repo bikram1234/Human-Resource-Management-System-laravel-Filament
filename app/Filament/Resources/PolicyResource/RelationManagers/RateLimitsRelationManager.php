@@ -29,12 +29,14 @@ class RateLimitsRelationManager extends RelationManager
                 MasGrade::all()->pluck('name', 'id')->toArray()
             )
             ->multiple()
-            ->required(),
+            ->required()
+            ->disabledOn('edit'),
             Forms\Components\Select::make('region')
             ->options(
                 region::all()->pluck('name', 'id')->toArray()
             )
-            ->required(),
+            ->required()
+            ->disabledOn('edit') ,
             Forms\Components\TextInput::make('limit_amount')
             ->required()
             ->numeric()

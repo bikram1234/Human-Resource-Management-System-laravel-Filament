@@ -41,6 +41,7 @@ class LevelsRelationManager extends RelationManager
             ->options(
                 FilamentUser::all()->pluck('name', 'id')->toArray()
             )
+            ->label("Employee")
             ->visible(function(callable $get){
                 if(in_array((string)$get('value'),["MM", "HR", "FH"])){
                     return true;
@@ -69,7 +70,7 @@ class LevelsRelationManager extends RelationManager
         return $table
         ->columns([
             Tables\Columns\TextColumn::make('hierarchy.name'),
-            Tables\Columns\TextColumn::make('emp_id'),
+            Tables\Columns\TextColumn::make('employeeName.employee_display'),
             Tables\Columns\TextColumn::make('level'),
             Tables\Columns\TextColumn::make('value')->label('Verifier'),
             Tables\Columns\TextColumn::make('start_date')

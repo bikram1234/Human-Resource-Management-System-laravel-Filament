@@ -29,6 +29,7 @@ class LeaveRulesRelationManager extends RelationManager
             )
             ->multiple()
             ->required()
+            ->disabledOn('edit') 
             ->label("Grade"),
             Forms\Components\TextInput::make('duration')
                 ->required(),
@@ -49,7 +50,8 @@ class LeaveRulesRelationManager extends RelationManager
                 'probation_period'=> "Probation",
                 'contract_period' => "Contract",
                 'notice_period' => "Notice",
-            ])->required(),
+            ])->required()
+            ->disabledOn('edit'),
             Forms\Components\Toggle::make('status')
                 ->required(),
         ]);

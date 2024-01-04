@@ -105,7 +105,7 @@ class RateLimit extends Model
              return false;
          });
 
-         static::saving(function ($model) {
+         static::creating(function ($model) {
             $grade = $model->grade;
             $region = $model->region;
             $policyId = $model->policy_id;

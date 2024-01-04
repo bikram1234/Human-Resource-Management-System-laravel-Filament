@@ -121,7 +121,7 @@ class LeaveRule extends Model
                 return false;
             });
    
-            static::saving(function ($model) {
+            static::creating(function ($model) {
                $grade = $model->grade_id;
                $policyId = $model->policy_id;
                $employee_type = $model->employee_type;

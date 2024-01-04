@@ -20,7 +20,7 @@ class RateDefinitionsRelationManager extends RelationManager
 {
     protected static string $relationship = 'rateDefinitions';
 
-    protected static ?string $recordTitleAttribute = 'travel_type';
+    protected static ?string $recordTitleAttribute = 'policy_id';
 
 
 
