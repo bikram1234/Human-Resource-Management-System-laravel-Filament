@@ -16,11 +16,16 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class HierarchyResource extends Resource
 {
     protected static ?string $model = Hierarchy::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
-
     protected static ?string $navigationGroup = 'Setting';
-
+    protected static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    protected static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 10 ? 'warning' : 'primary';
+    }
     public static function form(Form $form): Form
     {
         return $form

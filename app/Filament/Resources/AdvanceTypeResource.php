@@ -17,11 +17,17 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class AdvanceTypeResource extends Resource
 {
     protected static ?string $model = AdvanceType::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-
     protected static ?string $navigationGroup = 'Advance/Loan';
     protected static ?int $navigationSort = 1;
+    protected static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    protected static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 10 ? 'warning' : 'primary';
+    }
 
 
     public static function form(Form $form): Form

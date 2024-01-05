@@ -16,11 +16,17 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ExpenseTypeResource extends Resource
 {
     protected static ?string $model = ExpenseType::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-
     protected static ?string $navigationGroup = 'Expense';
     protected static ?int $navigationSort = 1;
+    protected static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    protected static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 10 ? 'warning' : 'primary';
+    }
 
 
 

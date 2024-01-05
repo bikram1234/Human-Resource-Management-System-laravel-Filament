@@ -28,12 +28,10 @@ use Chiiya\FilamentAccessControl\Models\FilamentUser;
 class AdvanceApprovalResource extends Resource
 {
     protected static ?string $model = AdvanceApproval::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-check-circle';
     protected static ?string $navigationGroup = 'Advance/Loan';
     protected static ?string $navigationLabel = 'Approval';
     protected static ?string $pluralModelLabel = 'Advance Approval List';
-
     protected static ?int $navigationSort = 3;
 
 

@@ -24,8 +24,16 @@ class VehicleTypeResource extends Resource
     protected static ?string $navigationLabel = 'Vehicle';
     protected static ?string $pluralModelLabel = 'Vehicle List';
     protected static ?string $modelLabel = 'Vehicle';
-
     protected static ?int $navigationSort = 10;
+
+    protected static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    protected static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 10 ? 'warning' : 'primary';
+    }
     public static function form(Form $form): Form
     {
         return $form

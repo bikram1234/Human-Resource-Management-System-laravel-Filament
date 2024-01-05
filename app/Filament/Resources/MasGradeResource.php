@@ -17,16 +17,19 @@ use Filament\Tables\Filters\SelectFilter;
 class MasGradeResource extends Resource
 {
     protected static ?string $model = MasGrade::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
-
     protected static ?string $navigationGroup = 'Employee-Master';
-
     protected static ?string $navigationLabel = 'Grade';
-
     protected static ?string $pluralModelLabel = 'All Grades';
-
     protected static ?string $modelLabel = 'Grade';
+    protected static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    protected static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 10 ? 'warning' : 'primary';
+    }
 
     public static function form(Form $form): Form
     {

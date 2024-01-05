@@ -21,15 +21,18 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class PolicyResource extends Resource
 {
     protected static ?string $model = Policy::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-clipboard';
-
     protected static ?string $navigationGroup = 'Expense';
-
     protected static ?string $navigationLabel = 'Policy';
-
-
     protected static ?int $navigationSort = 2;
+    protected static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+    protected static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 10 ? 'warning' : 'primary';
+    }
 
 
 
