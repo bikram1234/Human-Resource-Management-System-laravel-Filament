@@ -20,7 +20,9 @@ use Filament\Http\Controllers\AssetController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect()->route('filament.auth.login');
+
 });
 
 

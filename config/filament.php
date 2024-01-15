@@ -88,8 +88,8 @@ return [
     'auth' => [
         'guard' => env('FILAMENT_AUTH_GUARD', 'filament'),
         'pages' => [
-            'login' => App\Filament\Pages\Login:: class,
-            // \Chiiya\FilamentAccessControl\Http\Livewire\Login::class,
+            'login' => \Chiiya\FilamentAccessControl\Http\Livewire\Login::class,
+            //App\Filament\Pages\Login:: class,
         ],
     ],
 
@@ -115,7 +115,7 @@ return [
         'namespace' => 'App\\Filament\\Pages',
         'path' => app_path('Filament/Pages'),
         'register' => [
-            Pages\Dashboard::class,
+            //Pages\Dashboard::class,
         ],
     ],
 
