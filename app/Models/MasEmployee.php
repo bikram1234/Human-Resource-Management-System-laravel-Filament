@@ -31,7 +31,6 @@ class MasEmployee extends FilamentUser
             "emp_id",
             "grade_id",
             "grade_step_id",
-            "created_by",
             'department_id',
             'section_id',
             "designation_id",
