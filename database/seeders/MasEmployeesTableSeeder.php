@@ -28,7 +28,7 @@ class MasEmployeesTableSeeder extends Seeder
            'date_of_appointment' => '2024-01-19',
            'gender' => 'Male',
            'employment_type' => 'Regular',
-           'region_id' => 1,
+          // 'region_id' => 1,
        ]);
    
        // Get the 'super-admin' role
