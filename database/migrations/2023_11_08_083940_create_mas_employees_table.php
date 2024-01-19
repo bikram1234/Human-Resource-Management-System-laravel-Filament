@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string("last_name",100)->nullable();
             $table->string("emp_id",50)->index();
             $table->date("date_of_appointment");
-            $table->uuid("grade_id")->index();
-            $table->uuid("grade_step_id")->index();
+            $table->uuid("grade_id")->nullable()->change();
+            $table->uuid("grade_step_id")->nullable()->change();
             //$table->uuid("created_by")->index();
-            $table->uuid("designation_id")->index();
+            $table->uuid("designation_id")->nullable()->change();
             $table->unsignedBigInteger('department_id')->nullable();
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('set null');
 
