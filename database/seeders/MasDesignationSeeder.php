@@ -18,7 +18,7 @@ class MasDesignationSeeder extends Seeder
         //
         $file = File::get("database/data/designations.json");
         $designations = json_decode($file,true);
-        $superAdminId =DB::table("users")->whereRaw("email = 'sw_engineer1.sdu@tashicell.com'")->value('id');
+        $superAdminId =DB::table("mas_employees")->whereRaw("email = 'sw_engineer1.sdu@tashicell.com'")->value('id');
         foreach($designations as $designation):
             $designation['created_by'] = $superAdminId;
             MasDesignation::create($designation);
