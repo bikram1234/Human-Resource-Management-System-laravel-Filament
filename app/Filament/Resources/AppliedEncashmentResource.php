@@ -100,7 +100,7 @@ class AppliedEncashmentResource extends Resource
                 ->default($currentUserId)
                 ->required(),
                 Forms\Components\Hidden::make('number_of_days')
-                ->default(30)
+                ->default(37)
                 ->required(),
                 Forms\Components\TextInput::make('date')
                 ->type('date')
