@@ -76,6 +76,11 @@ class AdvanceApprovalResource extends Resource
                 //
             ])
             ->actions([
+                Action::make('View The Request')
+                ->color('success')
+                ->url(fn ($record): string => "/admin/apply-advances/" . $record->AdvanceApply->id)
+                ->openUrlInNewTab(),
+
                 Tables\Actions\ViewAction::make(),
                 Action::make('Approve')
                 ->action(fn (AdvanceApproval $record) => AdvanceApprovalResource::ApproveAdvance($record))

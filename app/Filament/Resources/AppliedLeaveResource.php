@@ -320,6 +320,7 @@ class AppliedLeaveResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Action::make('Download')
                 ->action(fn (AppliedLeave $record) => AppliedLeaveResource::downloadFile($record))
@@ -349,6 +350,8 @@ class AppliedLeaveResource extends Resource
             'index' => Pages\ListAppliedLeaves::route('/'),
             'create' => Pages\CreateAppliedLeave::route('/create'),
             'edit' => Pages\EditAppliedLeave::route('/{record}/edit'),
+            'view' => Pages\AppliedLeave::route('/{record}'),
+
         ];
     }  
 

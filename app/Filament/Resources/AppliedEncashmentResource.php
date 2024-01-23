@@ -142,7 +142,6 @@ class AppliedEncashmentResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -163,6 +162,8 @@ class AppliedEncashmentResource extends Resource
             'index' => Pages\ListAppliedEncashments::route('/'),
             'create' => Pages\CreateAppliedEncashment::route('/create'),
             'edit' => Pages\EditAppliedEncashment::route('/{record}/edit'),
+            //'view' => Pages\AppliedEncashment::route('/{record}'),
+
         ];
     }    
 }

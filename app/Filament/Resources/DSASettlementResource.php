@@ -342,6 +342,8 @@ class DSASettlementResource extends Resource
             'index' => Pages\ListDSASettlements::route('/'),
             'create' => Pages\CreateDSASettlement::route('/create'),
             'edit' => Pages\EditDSASettlement::route('/{record}/edit'),
+            'view' => Pages\DSASettlement::route('/{record}'),
+
         ];
     } 
     public static function downloadFile($record)

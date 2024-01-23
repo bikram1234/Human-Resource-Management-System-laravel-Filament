@@ -43,5 +43,6 @@ class AppliedEncashment extends Model
     public static function canViewForRecord(Model $ownerRecord): bool
     {
         return $ownerRecord->status === 'approved';
-    }}
-    }}
+    }
+}
+    

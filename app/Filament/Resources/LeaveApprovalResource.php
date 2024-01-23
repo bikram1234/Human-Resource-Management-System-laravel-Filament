@@ -79,12 +79,17 @@ class LeaveApprovalResource extends Resource
                 ->label('To Date'),
                 Tables\Columns\TextColumn::make('AppliedLeave.number_of_days')
                 ->label('no.of Days'),
-                Tables\Columns\TextColumn::make('remark'),
+                Tables\Columns\TextColumn::make('AppliedLeave.remark')
+                ->label("Remark"),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                Action::make('View The Request')
+                ->color('success')
+                ->url(fn ($record): string => "/admin/applied-leaves/" . $record->AppliedLeave->id)
+                ->openUrlInNewTab(),
                 Tables\Actions\ViewAction::make(),
                 Action::make('Approve')
                 ->action(fn (LeaveApproval $record) => LeaveApprovalResource::ApproveLeave($record))

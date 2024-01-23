@@ -74,6 +74,10 @@ class DSAApprovalResource extends Resource
                 //
             ])
             ->actions([
+                Action::make('View The Request')
+                ->color('success')
+                ->url(fn ($record): string => "/admin/d-s-a-settlements/" . $record->DSAApply->id)
+                ->openUrlInNewTab(),
                 Tables\Actions\ViewAction::make(),
                 Action::make('Approve')
                 ->action(fn (DSAApproval $record) => DSAApprovalResource::ApproveExpense($record))
