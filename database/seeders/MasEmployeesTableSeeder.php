@@ -31,10 +31,16 @@ class MasEmployeesTableSeeder extends Seeder
           // 'region_id' => 1,
        ]);
    
-       // Get the 'super-admin' role
-       $role = Role::findById(1);
-   
-       // Assign the role to the user
-       $user->assignRole($role);
+               // Get the 'super-admin' role
+         $role = Role::where('name', 'super-admin')->first();
+
+         // Check if the role exists
+         if ($role) {
+            // Assign the role to the user
+            $user->assignRole($role);
+         } else {
+            // Handle the case where the role does not exist
+            // You may create the role here or throw an exception
+         }
     }
 }

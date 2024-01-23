@@ -2,8 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\ApplyAdvanceResource;
+use Filament\Tables\Actions\ViewAction;
 use App\Filament\Resources\AdvanceApprovalResource\Pages;
 use App\Filament\Resources\AdvanceApprovalResource\RelationManagers;
+use App\Filament\Resources\ApplyAdvanceResource\Pages\ApplyAdvance as PagesApplyAdvance;
 use App\Models\AdvanceApproval;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -23,7 +26,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\Level;
 use App\Models\MasEmployee;
 use Chiiya\FilamentAccessControl\Models\FilamentUser;
-
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TextInput;
 
 class AdvanceApprovalResource extends Resource
 {
@@ -62,9 +66,9 @@ class AdvanceApprovalResource extends Resource
                 Tables\Columns\TextColumn::make('AdvanceApply.date')
                 ->label("date"),
                 Tables\Columns\TextColumn::make('AdvanceApply.amount')
-                ->label("Description"),
+                ->label("Amount"),
                 Tables\Columns\TextColumn::make('AdvanceApply.purpose')
-                ->label("Attachment"),
+                ->label("Purpose"),
                 Tables\Columns\TextColumn::make('AdvanceApply.status')
                 ->label("Status"),
             ])
@@ -118,6 +122,8 @@ class AdvanceApprovalResource extends Resource
         return [
             'index' => Pages\ListAdvanceApprovals::route('/'),
             'create' => Pages\CreateAdvanceApproval::route('/create'),
+            //'view' => ApplyAdvanceResource\Pages\ApplyAdvance::route('/{record}'),
+
         ];
     } 
     public static function ApproveAdvance($record) {

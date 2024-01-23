@@ -403,6 +403,8 @@ class ApplyAdvanceResource extends Resource
             'index' => Pages\ListApplyAdvances::route('/'),
             'create' => Pages\CreateApplyAdvance::route('/create'),
             'edit' => Pages\EditApplyAdvance::route('/{record}/edit'),
+            'view' => Pages\ApplyAdvance::route('/{record}'),
+
         ];
     } 
     public static function downloadFile($record)
