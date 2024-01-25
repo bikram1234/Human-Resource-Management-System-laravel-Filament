@@ -210,7 +210,7 @@ class AdvanceApprovalResource extends Resource
     
             }else if($leaveApplication->AdvanceApproval->level1==='approved' && $approvalType->MaxLevel === 'Level2') {
                 $leaveApplication->AdvanceApproval->update([
-                    'level1' => 'approved',
+                    'level2' => 'approved',
                 ]);
         
                 // Update the AppliedLeave model fields
