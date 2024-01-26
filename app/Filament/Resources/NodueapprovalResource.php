@@ -23,6 +23,9 @@ use App\Mail\NoDueApproveMail;
 use Illuminate\Support\Facades\Mail;
 use Filament\Notifications\Notification;
 use Chiiya\FilamentAccessControl\Models\FilamentUser;
+use Illuminate\Http\Request;
+
+
 
 
 
@@ -47,6 +50,9 @@ class NodueapprovalResource extends Resource
                     ->required(),
                 Forms\Components\TextInput::make('status')
                     ->required(),
+                Forms\Components\Textarea::make('remark')
+                    ->placeholder('Enter Remark (Optional)')
+                    ->rows(3),    
                 
             ]);
     }
@@ -76,8 +82,18 @@ class NodueapprovalResource extends Resource
                 ->hidden(function ( Nodueapproval $record) {
                     return $record->nodue->status === "approved";
                 }), 
+                //Action::make('Reject')
+                //->action(fn (nodueapproval $record) => NodueapprovalResource::RejectNodue($record, $from))
                 Action::make('Reject')
-                ->action(fn (nodueapproval $record) => NodueapprovalResource::RejectNodue($record))
+                ->action(function (nodueapproval $record) {
+                    // Do nothing
+                })
+                ->form([
+                    Forms\Components\Textarea::make('remark')
+                        ->placeholder('Enter Remark (Optional)')
+                        ->rows(3)
+                        ->required(),
+                ])
                 ->requiresConfirmation()
                 ->modalHeading('Reject')
                 ->modalSubheading('Are you sure you\'d like to reject? This cannot be undone.')
@@ -85,7 +101,12 @@ class NodueapprovalResource extends Resource
                 ->color('danger')
                 ->hidden(function ( Nodueapproval $record) {
                     return $record->nodue->status === "approved";
-                }),             ])
+                })->after(function ($record) {
+                    $remark = request()->input('remark');
+                    NodueapprovalResource::RejectNodue($record, $remark);
+                }),             
+          
+                ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
@@ -284,12 +305,18 @@ class NodueapprovalResource extends Resource
         }
     }
 
-    public static function RejectNodue($record) {
+    public static function RejectNodue( $record,$remark) {
         // Decline a request
         $id = $record->id;
         $approval = nodueapproval::findOrFail($id);
         $approval->status1 = 'rejected';
         $approval->status2 = 'rejected';
+         // Get the remark from the form data
+         $remark = request()->input('remark');
+         dd($remark);
+         $approval->remark = $remark;
+
+
         $approval->save();
         $currentUser = auth()->user();
         $reject= $currentUser->name;
@@ -308,4 +335,5 @@ class NodueapprovalResource extends Resource
         ->send();
 
     }
+    
 }
