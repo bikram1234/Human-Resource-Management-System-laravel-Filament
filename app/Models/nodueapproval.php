@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class nodueapproval extends Model
 {
     use HasFactory, HasUuids;
-    protected $fillable = ['no_due_id','date', 'user_id', 'status1','status2','approver_user_id' => 'array','department_approval_id' => 'array'];
+    protected $fillable = ['no_due_id','date', 'user_id', 'status1','remark','status2','approver_user_id' => 'array','department_approval_id' => 'array'];
 
     public function nodue()
     {

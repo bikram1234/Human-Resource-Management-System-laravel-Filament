@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->date('date');
             $table->uuid('no_due_id');
+            $table->text('remark')->nullable();
             $table->foreign('user_id')->references('id')->on('mas_employees')->onDelete('cascade');
             $table->foreign('no_due_id')->references('id')->on('nodues')->onDelete('cascade');
             $table->enum('status1', ['pending', 'approved','rejected'])->default('pending'); 

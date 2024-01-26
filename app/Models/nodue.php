@@ -11,7 +11,7 @@ class nodue extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $fillable = ['user_id','date', 'reason', 'status'];
+    protected $fillable = ['user_id','date', 'reason', 'status', 'remark'];
 
     public function user()
     {
