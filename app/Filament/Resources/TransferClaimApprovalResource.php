@@ -60,18 +60,18 @@ class TransferClaimApprovalResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('ExpenseApply.user.name'),
-                Tables\Columns\TextColumn::make('ExpenseApply.date')
+                Tables\Columns\TextColumn::make('TransferApply.user.name'),
+                Tables\Columns\TextColumn::make('TransferApply.date')
                 ->label("Date"),
-                Tables\Columns\TextColumn::make('ExpenseApply.designation')
+                Tables\Columns\TextColumn::make('TransferApply.designation')
                 ->label("Designation"),
-                Tables\Columns\TextColumn::make('ExpenseApply.basic_pay')
+                Tables\Columns\TextColumn::make('TransferApply.basic_pay')
                 ->label("Basic Pay"),
-                Tables\Columns\TextColumn::make('ExpenseApply.transfer_claim_type')
+                Tables\Columns\TextColumn::make('TransferApply.transfer_claim_type')
                 ->label("Transfer Claim"),
-                Tables\Columns\TextColumn::make('ExpenseApply.claim_amount')
+                Tables\Columns\TextColumn::make('TransferApply.claim_amount')
                 ->label("Amount"),
-                Tables\Columns\TextColumn::make('ExpenseApply.status')
+                Tables\Columns\TextColumn::make('TransferApply.status')
                 ->label("Status"),
             ])
             ->filters([
@@ -89,8 +89,15 @@ class TransferClaimApprovalResource extends Resource
                 ->hidden(function ( TransferClaimApproval $record) {
                     return $record->TransferApply->status === "approved";
                 }), 
+                //Action::make('Reject')
+                //->action(fn (TransferClaimApproval $record) => TransferClaimApprovalResource::RejectExpense($record))
                 Action::make('Reject')
-                ->action(fn (TransferClaimApproval $record) => TransferClaimApprovalResource::RejectExpense($record))
+                ->form([
+                    Forms\Components\Textarea::make('remark')
+                        ->placeholder('Enter Remark (Required)')
+                        ->rows(3)
+                        ->required(),
+                ])
                 ->requiresConfirmation()
                 ->modalHeading('Reject')
                 ->modalSubheading('Are you sure you\'d like to reject? This cannot be undone.')
@@ -98,7 +105,11 @@ class TransferClaimApprovalResource extends Resource
                 ->color('danger')
                 ->hidden(function ( TransferClaimApproval $record) {
                     return $record->TransferApply->status === "approved";
-                }),             
+                })
+                ->action(function (TransferClaimApproval $record, array $data) {
+                    $remark = $data['remark'];
+                    TransferClaimApprovalResource::RejectExpense($record, $remark);
+                })              
                 ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -282,10 +293,9 @@ class TransferClaimApprovalResource extends Resource
 
     }
     
-    public static function RejectExpense($record) {
-        $id = $record->applied_advance_id;
+    public static function RejectExpense($record, $remark) {
+        $id = $record->applied_expense_id;
         $ExpenseApplication = TransferClaim::findOrFail($id);
-        $remark = $ExpenseApplication->remark;
         $expense_id = $ExpenseApplication->expense_type_id;
 
         $userID = $ExpenseApplication->user_id;
@@ -300,20 +310,20 @@ class TransferClaimApprovalResource extends Resource
         $hierarchy_id = $approvalType->hierarchy_id;
 
         $leaveApplication = TransferClaim::findOrFail($id);
-        $departmentId = $user->department_id;
-        $departmentHead = FilamentUser::where('department_id', $departmentId)
-        ->where('is_departmentHead', true)
-        ->first();
+       
 
-                $leaveApplication->AdvanceApproval->update([
+                $leaveApplication->TransferClaimApproval->update([
                     'level1' => 'rejected',
                     'level2' => 'rejected',
                     'level3' => 'rejected',
+                    'remark' =>  $remark
                     
                 ]);
-                // Update the AppliedLeave model fields
+                // Update the TansferClaim model fields
                 $leaveApplication->update([
                     'status' => 'rejected',
+                    'remark' =>  $remark
+
                 ]);
 
                 $content = "Transfer Claim you have applied for has been rejected.";
@@ -325,6 +335,8 @@ class TransferClaimApprovalResource extends Resource
              // Update the AppliedLeave model fields
              $leaveApplication->update([
                 'status' => 'rejected',
+                'remark' =>  $remark
+
             ]);
             $content = "Transfer Claim have applied for has been rejected.";
         

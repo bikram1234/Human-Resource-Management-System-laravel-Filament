@@ -47,4 +47,4 @@ class EncashmentApproval extends Model
         });
     }
 }
-}
+

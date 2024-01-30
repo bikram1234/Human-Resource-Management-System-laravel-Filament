@@ -88,8 +88,15 @@ class FuelApprovalResource extends Resource
                 ->hidden(function ( FuelApproval $record) {
                     return $record->FuelApply->status === "approved";
                 }),
+                //Action::make('Reject')
+                //->action(fn (FuelApproval $record) => FuelApprovalResource::RejectExpense($record))
                 Action::make('Reject')
-                ->action(fn (FuelApproval $record) => FuelApprovalResource::RejectExpense($record))
+                ->form([
+                    Forms\Components\Textarea::make('remark')
+                        ->placeholder('Enter Remark (Required)')
+                        ->rows(3)
+                        ->required(),
+                ])
                 ->requiresConfirmation()
                 ->modalHeading('Reject')
                 ->modalSubheading('Are you sure you\'d like to reject? This cannot be undone.')
@@ -97,7 +104,11 @@ class FuelApprovalResource extends Resource
                 ->color('danger')
                 ->hidden(function ( FuelApproval $record) {
                     return $record->FuelApply->status === "approved";
-                }),            
+                })
+                ->action(function (FuelApproval $record, array $data) {
+                    $remark = $data['remark'];
+                    FuelApprovalResource::RejectExpense($record, $remark);
+                })            
                 ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -280,10 +291,9 @@ class FuelApprovalResource extends Resource
        
 
     } 
-    public static function RejectExpense($record) {
-        $id = $record->applied_advance_id;
+    public static function RejectExpense($record, $remark) {
+        $id = $record->applied_expense_id;
         $ExpenseApplication = FuelClaim::findOrFail($id);
-        $remark = $ExpenseApplication->remark;
         $expense_id = $ExpenseApplication->expense_type_id;
 
         $userID = $ExpenseApplication->user_id;
@@ -298,20 +308,19 @@ class FuelApprovalResource extends Resource
         $hierarchy_id = $approvalType->hierarchy_id;
 
         $leaveApplication = FuelClaim::findOrFail($id);
-        $departmentId = $user->department_id;
-        $departmentHead = FilamentUser::where('department_id', $departmentId)
-        ->where('is_departmentHead', true)
-        ->first();
+      
 
-                $leaveApplication->AdvanceApproval->update([
+                $leaveApplication->FuelApproval->update([
                     'level1' => 'rejected',
                     'level2' => 'rejected',
                     'level3' => 'rejected',
+                    'remark' => $remark
                     
                 ]);
-                // Update the AppliedLeave model fields
+                // Update the fuelClaim model fields
                 $leaveApplication->update([
                     'status' => 'rejected',
+                    'remark' => $remark
                 ]);
 
                 $content = "Fuel you have applied for has been rejected.";
@@ -323,6 +332,7 @@ class FuelApprovalResource extends Resource
              // Update the AppliedLeave model fields
              $leaveApplication->update([
                 'status' => 'rejected',
+                'remark' => $remark
             ]);
             $content = "Fuel have applied for has been rejected.";
         

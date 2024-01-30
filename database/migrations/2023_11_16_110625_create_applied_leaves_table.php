@@ -20,10 +20,9 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->double('number_of_days'); 
-            $table->string('status')->default('pending');
+            $table->enum('status', ['pending', 'approved','rejected'])->default('pending'); // Add the status field
             $table->string('remark')->nullable();
             $table->string('file_path')->nullable(); 
-
             $table->unsignedBigInteger("created_by")->index();
             $table->unsignedBigInteger("edited_by")->index()->nullable();
             $table->foreign("created_by")->references("id")->on("mas_employees")->onDelete('RESTRICT')->onUpdate('CASCADE');

@@ -52,8 +52,6 @@ class AdvanceApprovalResource extends Resource
                 Forms\Components\TextInput::make('level3')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('remark')
-                    ->maxLength(255),
             ]);
     }
 
@@ -92,8 +90,15 @@ class AdvanceApprovalResource extends Resource
                 ->hidden(function ( AdvanceApproval $record) {
                     return $record->AdvanceApply->status === "approved";
                 }),
+                //Action::make('Reject')
+                //->action(fn (AdvanceApproval $record) => AdvanceApprovalResource::RejectAdvance($record))
                 Action::make('Reject')
-                ->action(fn (AdvanceApproval $record) => AdvanceApprovalResource::RejectAdvance($record))
+                ->form([
+                    Forms\Components\Textarea::make('remark')
+                        ->placeholder('Enter Remark (Required)')
+                        ->rows(3)
+                        ->required(),
+                ])
                 ->requiresConfirmation()
                 ->modalHeading('Reject')
                 ->modalSubheading('Are you sure you\'d like to reject? This cannot be undone.')
@@ -101,7 +106,11 @@ class AdvanceApprovalResource extends Resource
                 ->color('danger')
                 ->hidden(function ( AdvanceApproval $record) {
                     return $record->AdvanceApply->status === "approved";
-                }), 
+                })
+                ->action(function (AdvanceApproval $record, array $data) {
+                    $remark = $data['remark'];
+                    AdvanceApprovalResource::RejectAdvance($record, $remark);
+                }) 
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -286,10 +295,10 @@ class AdvanceApprovalResource extends Resource
 
     }   
     
-    public static function RejectAdvance($record) {
-        $id = $record->applied_advance_id;
+    public static function RejectAdvance($record, $remark) {
+        //dd($remark);
+         $id = $record->applied_advance_id;
         $ExpenseApplication = ApplyAdvance::findOrFail($id);
-        $remark = $ExpenseApplication->remark;
         $expense_id = $ExpenseApplication->advance_type_id;
 
         $userID = $ExpenseApplication->user_id;
@@ -304,22 +313,20 @@ class AdvanceApprovalResource extends Resource
         $hierarchy_id = $approvalType->hierarchy_id;
 
         $leaveApplication = ApplyAdvance::findOrFail($id);
-        $departmentId = $user->department_id;
-        $departmentHead = FilamentUser::where('department_id', $departmentId)
-        ->where('is_departmentHead', true)
-        ->first();
-
                 $leaveApplication->AdvanceApproval->update([
                     'level1' => 'rejected',
                     'level2' => 'rejected',
                     'level3' => 'rejected',
+                    'remark'=>$remark  
+
                     
                 ]);
-                // Update the AppliedLeave model fields
+                // Update the Advance model fields
                 $leaveApplication->update([
-                    'status' => 'rejected',
-                ]);
+                    'status' => 'rejected', 
+                    'remark'=>$remark   
 
+                ]);
                 $content = "The Advance you have applied for has been rejected.";
                 
                 Mail::to($Approvalrecipient)->send(new AdvanceApprovedMail($user, $content));
@@ -329,6 +336,7 @@ class AdvanceApprovalResource extends Resource
              // Update the AppliedLeave model fields
              $leaveApplication->update([
                 'status' => 'rejected',
+                'remark' => $remark,
             ]);
             $content = "The Advance you have applied for has been rejected.";
         

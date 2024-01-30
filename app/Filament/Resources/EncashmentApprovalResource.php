@@ -83,8 +83,15 @@ class EncashmentApprovalResource extends Resource
                 ->hidden(function ( EncashmentApproval $record) {
                     return $record->EncashmentApply->status === "approved";
                 }),    
+                //Action::make('Reject')
+                //->action(fn (EncashmentApproval $record) => EncashmentApprovalResource::RejectEncashment($record))
                 Action::make('Reject')
-                ->action(fn (EncashmentApproval $record) => EncashmentApprovalResource::RejectEncashment($record))
+                ->form([
+                    Forms\Components\Textarea::make('remark')
+                        ->placeholder('Enter Remark (Required)')
+                        ->rows(3)
+                        ->required(),
+                ])
                 ->requiresConfirmation()
                 ->modalHeading('Reject')
                 ->modalSubheading('Are you sure you\'d like to reject? This cannot be undone.')
@@ -92,7 +99,11 @@ class EncashmentApprovalResource extends Resource
                 ->color('danger')
                 ->hidden(function ( EncashmentApproval $record) {
                     return $record->EncashmentApply->status === "approved";
-                }),           
+                })
+                ->action(function (EncashmentApproval $record, array $data) {
+                    $remark = $data['remark'];
+                    EncashmentApprovalResource::RejectEncashment($record, $remark);
+                })            
                 ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -253,7 +264,7 @@ class EncashmentApprovalResource extends Resource
                     'level3' => 'approved',
                 ]);
         
-                // Update the AppliedLeave model fields
+                // Update the AppliedEncashment model fields
                 $leaveApplication->update([
                     'status' => 'approved',
                 ]);
@@ -307,10 +318,9 @@ class EncashmentApprovalResource extends Resource
         } 
     }
      
-    public static function RejectEncashment($record) {
+    public static function RejectEncashment($record, $remark) {
         $id = $record->applied_encashment_id;
         $ExpenseApplication = AppliedEncashment::findOrFail($id);
-        $remark = $ExpenseApplication->remark;
        // $expense_id = $ExpenseApplication->expense_type_id;
        $Encashment = encashment:: Where('name','Leave Encashment')->first();
        if ($Encashment) {
@@ -333,20 +343,19 @@ class EncashmentApprovalResource extends Resource
         $hierarchy_id = $approvalType->hierarchy_id;
 
         $leaveApplication = AppliedEncashment::findOrFail($id);
-        $departmentId = $user->department_id;
-        $departmentHead = FilamentUser::where('department_id', $departmentId)
-        ->where('is_departmentHead', true)
-        ->first();
 
-                $leaveApplication->AdvanceApproval->update([
+                $leaveApplication->EncashmentApproval->update([
                     'level1' => 'rejected',
                     'level2' => 'rejected',
                     'level3' => 'rejected',
+                    'remark' => $remark
                     
                 ]);
-                // Update the AppliedLeave model fields
+                // Update the AppliedEncashment model fields
                 $leaveApplication->update([
                     'status' => 'rejected',
+                    'remark' => $remark
+
                 ]);
 
                 $content = "Leave Encashment has been rejected.";
@@ -355,9 +364,11 @@ class EncashmentApprovalResource extends Resource
             
            
         if($approvalType->approval_type === "Single User"){
-             // Update the AppliedLeave model fields
-             $leaveApplication->update([
+                // Update the AppliedEncashment model fields
+                $leaveApplication->update([
                 'status' => 'rejected',
+                'remark' => $remark
+
             ]);
             $content = "Leave Encashment has been rejected.";
         

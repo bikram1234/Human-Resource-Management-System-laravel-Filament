@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\HolidayType;
 use App\Models\Region;
 use Closure;
+use Filament\Tables\Filters\SelectFilter;
+
 
 class HolidaysRelationManager extends RelationManager
 {
@@ -190,11 +192,7 @@ class HolidaysRelationManager extends RelationManager
             Tables\Columns\TextColumn::make('description'),
         ])
             ->filters([
-                SelectFilter::make('Date')
-                    ->options([
-                        1 => 'Active',
-                        0 => 'In-active',
-                    ])
+                
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),

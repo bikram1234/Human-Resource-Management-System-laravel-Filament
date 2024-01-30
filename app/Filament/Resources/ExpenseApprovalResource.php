@@ -91,8 +91,15 @@ class ExpenseApprovalResource extends Resource
                 ->hidden(function ( ExpenseApproval $record) {
                     return $record->ExpenseApply->status === "approved";
                 }),    
+                //Action::make('Reject')
+                //->action(fn (ExpenseApproval $record) => ExpenseApprovalResource::RejectExpense($record))
                 Action::make('Reject')
-                ->action(fn (ExpenseApproval $record) => ExpenseApprovalResource::RejectExpense($record))
+                ->form([
+                    Forms\Components\Textarea::make('remark')
+                        ->placeholder('Enter Remark (Required)')
+                        ->rows(3)
+                        ->required(),
+                ])
                 ->requiresConfirmation()
                 ->modalHeading('Reject')
                 ->modalSubheading('Are you sure you\'d like to reject? This cannot be undone.')
@@ -100,7 +107,11 @@ class ExpenseApprovalResource extends Resource
                 ->color('danger')
                 ->hidden(function ( ExpenseApproval $record) {
                     return $record->ExpenseApply->status === "approved";
-                }),           
+                })
+                ->action(function (ExpenseApproval $record, array $data) {
+                    $remark = $data['remark'];
+                    ExpenseApprovalResource::RejectExpense($record, $remark);
+                })            
                 ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -283,10 +294,9 @@ class ExpenseApprovalResource extends Resource
        
 
     }
-    public static function RejectExpense($record) {
-        $id = $record->applied_advance_id;
+    public static function RejectExpense($record, $remark) {
+        $id = $record->applied_expense_id;
         $ExpenseApplication = ExpenseApplication::findOrFail($id);
-        $remark = $ExpenseApplication->remark;
         $expense_id = $ExpenseApplication->expense_type_id;
 
         $userID = $ExpenseApplication->user_id;
@@ -301,20 +311,19 @@ class ExpenseApprovalResource extends Resource
         $hierarchy_id = $approvalType->hierarchy_id;
 
         $leaveApplication = ExpenseApplication::findOrFail($id);
-        $departmentId = $user->department_id;
-        $departmentHead = FilamentUser::where('department_id', $departmentId)
-        ->where('is_departmentHead', true)
-        ->first();
+       
 
-                $leaveApplication->AdvanceApproval->update([
+                $leaveApplication->ExpenseApproval->update([
                     'level1' => 'rejected',
                     'level2' => 'rejected',
                     'level3' => 'rejected',
+                    'remark' => $remark
                     
                 ]);
-                // Update the AppliedLeave model fields
+                // Update the Expense application model fields
                 $leaveApplication->update([
                     'status' => 'rejected',
+                    'remark' => $remark
                 ]);
 
                 $content = "The Expense you have applied for has been rejected.";
@@ -326,6 +335,8 @@ class ExpenseApprovalResource extends Resource
              // Update the AppliedLeave model fields
              $leaveApplication->update([
                 'status' => 'rejected',
+                'remark' => $remark
+
             ]);
             $content = "The Expense have applied for has been rejected.";
         

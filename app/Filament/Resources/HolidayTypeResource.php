@@ -12,6 +12,8 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Filters\SelectFilter;
+
 
 class HolidayTypeResource extends Resource
 {
@@ -46,7 +48,11 @@ class HolidayTypeResource extends Resource
                     ->dateTime(),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options([
+                        1 => 'Active',
+                        0 => 'In-active',
+                    ])
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

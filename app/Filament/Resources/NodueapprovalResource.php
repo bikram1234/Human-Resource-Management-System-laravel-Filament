@@ -31,6 +31,11 @@ use Illuminate\Http\Request;
 
 
 
+
+
+
+
+
 class NodueapprovalResource extends Resource
 {
     protected static ?string $model = Nodueapproval::class;
@@ -49,10 +54,7 @@ class NodueapprovalResource extends Resource
                     ->disabled()  // Make the field disabled
                     ->required(),
                 Forms\Components\TextInput::make('status')
-                    ->required(),
-                Forms\Components\Textarea::make('remark')
-                    ->placeholder('Enter Remark (Optional)')
-                    ->rows(3),    
+                    ->required(),   
                 
             ]);
     }
@@ -64,7 +66,10 @@ class NodueapprovalResource extends Resource
                 Tables\Columns\TextColumn::make('user.name'),
                 Tables\Columns\TextColumn::make('date'),
                 // Tables\Columns\TextColumn::make('nodue.reason')->label("Reason"),
-                Tables\Columns\TextColumn::make('nodue.status')->label("Status"),
+                Tables\Columns\TextColumn::make('nodue.status')
+                ->label("Status"),
+                Tables\Columns\TextInputColumn::make('remark'),
+
                 
             ])
             ->filters([
@@ -74,6 +79,13 @@ class NodueapprovalResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Action::make('Approve')
                 ->action(fn (nodueapproval $record) => NodueapprovalResource::ApproveNodue($record))
+                //Action::make('Approve')
+                // ->form([
+                //     Forms\Components\Textarea::make('remark')
+                //         ->placeholder('Enter Remark (Optional)')
+                //         ->rows(3)
+                //         ->required(),
+                // ])
                 ->requiresConfirmation()
                 ->modalHeading('Approve')
                 ->modalSubheading('Are you sure you\'d like to approve? This cannot be undone.')
@@ -81,13 +93,14 @@ class NodueapprovalResource extends Resource
                 ->color('success')
                 ->hidden(function ( Nodueapproval $record) {
                     return $record->nodue->status === "approved";
-                }), 
-                //Action::make('Reject')
-                //->action(fn (nodueapproval $record) => NodueapprovalResource::RejectNodue($record, $from))
+                }),
+                // ->action(function (Nodueapproval $record, array $data) {
+                //     $remark = $data['remark'];
+                //     NodueapprovalResource::ApproveNodue($record, $remark);
+                // }),
+                // Action::make('Reject')
+                // ->action(fn (nodueapproval $record) => NodueapprovalResource::RejectNodue($record))
                 Action::make('Reject')
-                ->action(function (nodueapproval $record) {
-                    // Do nothing
-                })
                 ->form([
                     Forms\Components\Textarea::make('remark')
                         ->placeholder('Enter Remark (Optional)')
@@ -101,10 +114,12 @@ class NodueapprovalResource extends Resource
                 ->color('danger')
                 ->hidden(function ( Nodueapproval $record) {
                     return $record->nodue->status === "approved";
-                })->after(function ($record) {
-                    $remark = request()->input('remark');
+                })
+                ->action(function (Nodueapproval $record, array $data) {
+                    $remark = $data['remark'];
                     NodueapprovalResource::RejectNodue($record, $remark);
-                }),             
+                })
+            
           
                 ])
             ->bulkActions([
@@ -169,7 +184,8 @@ class NodueapprovalResource extends Resource
             if ($sectionHeadIDs->contains($currentUser->id)) {
                 // Check if the current user has already approved
                 $approverUserIds = json_decode($approval->approver_user_id, true) ?? [];
-                if ($approval->status1 === 'approved' && in_array($currentUser->id, $approverUserIds)) {
+                //$approval->status1 === 'approved' &&
+                if (in_array($currentUser->id, $approverUserIds)) {
                     dd("You have already approved this request");
                     return false;
                 }
@@ -189,6 +205,7 @@ class NodueapprovalResource extends Resource
             
                 if (count($sectionHeadIDs->toArray()) === count($approvedSectionHeadIDs)) {
                     // Update the status to 'approved' if all section heads have approved
+                    //$approval->remark = $remark;
                     $approval->status1 = 'approved';
                     $approval->save();
                     $departments = Department::all();
@@ -257,7 +274,9 @@ class NodueapprovalResource extends Resource
             if ($departmentHeadIDs->contains($currentUser->id)) {
                 // Check if the current user has already approved
                 $approveUserIds = json_decode($approval->department_approval_id, true) ?? [];
-                if ($approval->status2 === 'approved' && in_array($currentUser->id, $approveUserIds)) {
+                //dd($approveUserIds);
+                //$approval->status2 === 'approved' && 
+                if (in_array($currentUser->id, $approveUserIds)) {
                     dd("You have already approved this request");
                     return false;
                 }
@@ -267,6 +286,7 @@ class NodueapprovalResource extends Resource
         
                 // Update the attribute with the modified array
                 $approval->setAttribute('department_approval_id', json_encode($approveUserIds));
+                //dd($approval);
         
                 // Update the approval information for the current user
                // $approval->status2 = 'approved';
@@ -277,8 +297,12 @@ class NodueapprovalResource extends Resource
         
                 if (count($departmentHeadIDs->toArray()) === count($approvedDepartmentHeadIDs)) {
                     // Update the status to 'approved' if all department heads have approved
+                    //$approval->remark = $remark;
                     $approval->status2 = 'approved';
                     $approval->nodue->status = 'approved';
+                    $remark = $approval->remark;
+                    $approval->nodue->remark = $remark;
+
                     $approval->save();
                     $approval->nodue->save();
                     $applicant = $approval->nodue->user->email;
@@ -312,9 +336,8 @@ class NodueapprovalResource extends Resource
         $approval->status1 = 'rejected';
         $approval->status2 = 'rejected';
          // Get the remark from the form data
-         $remark = request()->input('remark');
-         dd($remark);
-         $approval->remark = $remark;
+         //dd($remark);
+        $approval->remark = $remark;
 
 
         $approval->save();

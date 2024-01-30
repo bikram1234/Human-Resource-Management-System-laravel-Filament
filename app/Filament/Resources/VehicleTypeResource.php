@@ -50,6 +50,8 @@ class VehicleTypeResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('vehicle_type'),
+                Tables\Columns\TextColumn::make('created_at'),
+                Tables\Columns\TextColumn::make('updated_at'),
                 
                
             ])

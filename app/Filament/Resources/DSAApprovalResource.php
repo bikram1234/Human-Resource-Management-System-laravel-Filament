@@ -89,8 +89,15 @@ class DSAApprovalResource extends Resource
                 ->hidden(function ( DSAApproval $record) {
                     return $record->DSAApply->status === "approved";
                 }),
+                //Action::make('Reject')
+                //->action(fn (DSAApproval $record) => DSAApprovalResource::RejectExpense($record))
                 Action::make('Reject')
-                ->action(fn (DSAApproval $record) => DSAApprovalResource::RejectExpense($record))
+                ->form([
+                    Forms\Components\Textarea::make('remark')
+                        ->placeholder('Enter Remark (Required)')
+                        ->rows(3)
+                        ->required(),
+                ])
                 ->requiresConfirmation()
                 ->modalHeading('Reject')
                 ->modalSubheading('Are you sure you\'d like to reject? This cannot be undone.')
@@ -98,7 +105,11 @@ class DSAApprovalResource extends Resource
                 ->color('danger')
                 ->hidden(function ( DSAApproval $record) {
                     return $record->DSAApply->status === "approved";
-                }),           
+                })
+                ->action(function (DSAApproval $record, array $data) {
+                    $remark = $data['remark'];
+                    DSAApprovalResource::RejectExpense($record, $remark);
+                })           
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -281,10 +292,9 @@ class DSAApprovalResource extends Resource
 
     }
 
-    public static function RejectExpense($record) {
-        $id = $record->applied_advance_id;
+    public static function RejectExpense($record, $remark) {
+        $id = $record->applied_expense_id;
         $ExpenseApplication = DSASettlement::findOrFail($id);
-        $remark = $ExpenseApplication->remark;
         $expense_id = $ExpenseApplication->expensetype_id;
 
         $userID = $ExpenseApplication->user_id;
@@ -300,19 +310,20 @@ class DSAApprovalResource extends Resource
 
         $leaveApplication = DSASettlement::findOrFail($id);
         $departmentId = $user->department_id;
-        $departmentHead = FilamentUser::where('department_id', $departmentId)
-        ->where('is_departmentHead', true)
-        ->first();
+       
 
-                $leaveApplication->AdvanceApproval->update([
+                $leaveApplication->DSAApproval->update([
                     'level1' => 'rejected',
                     'level2' => 'rejected',
                     'level3' => 'rejected',
+                    'remark' => $remark
                     
                 ]);
-                // Update the AppliedLeave model fields
+                // Update the DSA model fields
                 $leaveApplication->update([
                     'status' => 'rejected',
+                    'remark' => $remark
+
                 ]);
 
                 $content = "DSA you have applied for has been rejected.";
@@ -324,6 +335,8 @@ class DSAApprovalResource extends Resource
              // Update the AppliedLeave model fields
              $leaveApplication->update([
                 'status' => 'rejected',
+                'remark' => $remark
+
             ]);
             $content = "DSA have applied for has been rejected.";
         

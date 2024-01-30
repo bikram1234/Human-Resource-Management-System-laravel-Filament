@@ -101,8 +101,15 @@ class LeaveApprovalResource extends Resource
                 ->hidden(function ( LeaveApproval $record) {
                     return $record->AppliedLeave->status === "approved";
                 }),
+                //Action::make('Reject')
+                //->action(fn (LeaveApproval $record) => LeaveApprovalResource::RejectLeave($record))
                 Action::make('Reject')
-                ->action(fn (LeaveApproval $record) => LeaveApprovalResource::RejectLeave($record))
+                ->form([
+                    Forms\Components\Textarea::make('remark')
+                        ->placeholder('Enter Remark (Required)')
+                        ->rows(3)
+                        ->required(),
+                ])
                 ->requiresConfirmation()
                 ->modalHeading('Reject')
                 ->modalSubheading('Are you sure you\'d like to reject? This cannot be undone.')
@@ -110,7 +117,11 @@ class LeaveApprovalResource extends Resource
                 ->color('danger')
                 ->hidden(function ( LeaveApproval $record) {
                     return $record->AppliedLeave->status === "approved";
-                }),
+                })
+                ->action(function (LeaveApproval $record, array $data) {
+                    $remark = $data['remark'];
+                    LeaveApprovalResource::RejectLeave($record, $remark);
+                }) 
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -409,10 +420,9 @@ class LeaveApprovalResource extends Resource
         }
     }
 
-    public static function RejectLeave($record) {
+    public static function RejectLeave($record, $remark) {
         $id = $record->applied_leave_id;
         $leaveApplication = AppliedLeave::findOrFail($id);
-        $remark = $leaveApplication->remark;
         $expense_id = $leaveApplication->leave_id;
 
         $userID = $leaveApplication->employee_id;
@@ -427,20 +437,20 @@ class LeaveApprovalResource extends Resource
         $hierarchy_id = $approvalType->hierarchy_id;
 
         $leaveApplication = AppliedLeave::findOrFail($id);
-        $departmentId = $user->department_id;
-        $departmentHead = FilamentUser::where('department_id', $departmentId)
-        ->where('is_departmentHead', true)
-        ->first();
 
-                $leaveApplication->AdvanceApproval->update([
+                $leaveApplication->leaveApproval->update([
                     'level1' => 'rejected',
                     'level2' => 'rejected',
                     'level3' => 'rejected',
+                    'remark' => $remark
                     
                 ]);
                 // Update the AppliedLeave model fields
                 $leaveApplication->update([
+                    'remark' => $remark,
                     'status' => 'rejected',
+
+
                 ]);
 
                 $content = "Leave Application you have applied for has been rejected.";
@@ -452,6 +462,8 @@ class LeaveApprovalResource extends Resource
              // Update the AppliedLeave model fields
              $leaveApplication->update([
                 'status' => 'rejected',
+                'remark' =>  $remark
+
             ]);
             $content = "Leave Application have applied for has been rejected.";
         

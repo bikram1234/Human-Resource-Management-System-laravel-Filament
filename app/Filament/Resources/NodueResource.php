@@ -56,7 +56,7 @@ class NodueResource extends Resource
                 Tables\Columns\TextColumn::make('user.name'),
                 Tables\Columns\TextColumn::make('date'),
                 Tables\Columns\TextColumn::make('status'),
-                Tables\Columns\TextColumn::make('reason')
+                Tables\Columns\TextColumn::make('remark')
 
 
             ])
