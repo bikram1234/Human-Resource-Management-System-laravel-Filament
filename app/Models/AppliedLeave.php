@@ -24,7 +24,8 @@ class AppliedLeave extends Model
         'file_path',
         'remark',
         'created_by',
-        'edited_by'
+        'edited_by',
+        'status'
     ];
     
 

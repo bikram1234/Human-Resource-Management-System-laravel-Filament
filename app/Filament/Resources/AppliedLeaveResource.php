@@ -23,6 +23,8 @@ use App\Filament\Actions\DownloadFileAction;
 use Filament\Tables\Columns\LinkColumn;
 use Filament\Tables\Actions\Action;
 use Illuminate\Support\Facades\Storage;
+use App\Models\LeaveBalance;
+
 
 class AppliedLeaveResource extends Resource
 {
@@ -102,11 +104,19 @@ class AppliedLeaveResource extends Resource
                         ->where('grade_id', auth()->user()->grade_id)
                         ->first();
 
-                        if($leaveRule) {
-                            $leaveDuration = $leaveRule->duration;
-                            $leave_balance = $leaveDuration - $totalAppliedDays;
-                        }else{
-                            $leave_balance = "Rule Not defined";
+                        // if($leaveRule) {
+                        //     $leaveDuration = $leaveRule->duration;
+                        //     $leave_balance = $leaveDuration - $totalAppliedDays;
+                        // }else{
+                        //     $leave_balance = "Rule Not defined";
+                        // }
+                        $user_id = auth()->user()->id;
+                        $causal_balance = LeaveBalance::where('employee_id', $user_id)->first();
+                        if ($causal_balance) {
+                            $leave_balance = $causal_balance->casual_leave_balance;
+
+                        } else {
+                            $leave_balance = null;
                         }
                         
 
@@ -166,7 +176,8 @@ class AppliedLeaveResource extends Resource
                     })
                     ->label('Leave'),
                 Forms\Components\TextInput::make('leave_balance')
-                ->disabled(),
+                ->disabled()
+                ->required(),
            
                 Forms\Components\Select::make('optradioholidayfrom')
                 ->label('Select Half')

@@ -380,7 +380,8 @@ class LeaveApprovalResource extends Resource
             // Update the existing leave balance record
         
         } else {
-           
+            $leaveBalanceNow = ($leaveBalanceRecord->casual_leave_balance) - $totalAppliedDays;
+
             // Create a new leave balance record if it doesn't exist
             LeaveBalance::create([
                 'user_id' => $userID, 
@@ -428,7 +429,8 @@ class LeaveApprovalResource extends Resource
             // Update the existing leave balance record
         
         } else {
-           
+
+            $leaveBalanceNow = ($leaveBalanceRecord->earned_leave_balance) - $totalAppliedDays;
             // Create a new leave balance record if it doesn't exist
             LeaveBalance::create([
                 'user_id' => $userID, 
