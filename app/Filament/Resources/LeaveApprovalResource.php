@@ -79,8 +79,8 @@ class LeaveApprovalResource extends Resource
                 ->label('To Date'),
                 Tables\Columns\TextColumn::make('AppliedLeave.number_of_days')
                 ->label('no.of Days'),
-                Tables\Columns\TextColumn::make('AppliedLeave.remark')
-                ->label("Remark"),
+                Tables\Columns\TextColumn::make('AppliedLeave.status')
+                ->label("status"),
             ])
             ->filters([
                 //
@@ -222,16 +222,26 @@ class LeaveApprovalResource extends Resource
                     if ($levelValue === "DH") {
                         // Set the recipient to the section head's email address or user ID
                         $recipient = $departmentHead->email; // Replace with the actual field name
-                    }
-                    $approval = $departmentHead;
+                        $approval = $departmentHead;
+                        $currentUser = $user;
+                        Mail::to($recipient)->send(new LeaveApplicationMail($approval, $currentUser));
+                        Notification::make() 
+                        ->title('Leave Approved successfully')
+                        ->success()
+                        ->send();
+                    }else{
+                         // Access the 'value' field from the level record
+                    $levelValue = $levelRecord->value;
+                    $userID = $levelRecord->emp_id;
+                    $approval = FilamentUser::where('id', $userID)->first();
+                    // Determine the recipient based on the levelValue
+                    $recipient = $approval->email;
+    
                     $currentUser = $user;
     
-                    Mail::to($recipient)->send(new LeaveApplicationMail($approval, $currentUser));
-                    Notification::make() 
-                    ->title('Leave Approved successfully')
-                    ->success()
-                    ->send();
-                
+                    Mail::to($recipient)->send(new LeaveApplicationMail($approval, $currentUser));  
+                    }
+                   
                 }
     
             }else if($leaveApplication->leaveApproval->level1==='approved' && $approvalType->MaxLevel === 'Level2') {
@@ -303,6 +313,13 @@ class LeaveApprovalResource extends Resource
                 return redirect()->back()->with('error', 'Leave application cannot be approved.');
             }
         }else if($approvalType->approval_type === "Single User"){
+
+            $leaveApplication->leaveApproval->update([
+                'level1' => 'approved',
+                'level2' => 'approved',
+                'level3' => 'approved',
+                
+            ]);
              // Update the AppliedLeave model fields
              $leaveApplication->update([
                 'status' => 'approved',
@@ -437,6 +454,8 @@ class LeaveApprovalResource extends Resource
         $hierarchy_id = $approvalType->hierarchy_id;
 
         $leaveApplication = AppliedLeave::findOrFail($id);
+
+        //dd($leaveApplication->status);
 
                 $leaveApplication->leaveApproval->update([
                     'level1' => 'rejected',

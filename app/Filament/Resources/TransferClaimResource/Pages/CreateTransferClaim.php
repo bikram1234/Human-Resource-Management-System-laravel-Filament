@@ -9,7 +9,7 @@ use App\Models\ExpenseApprovalRule;
 use App\Models\Level;
 use App\Mail\ExpenseApplicationMail;
 use Illuminate\Support\Facades\Mail;
-use App\Models\MasEmployee;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use App\Models\ExpenseApprovalCondition;
 
 class CreateTransferClaim extends CreateRecord
@@ -21,7 +21,7 @@ class CreateTransferClaim extends CreateRecord
         $sectionId = auth()->user()->section_id;
         // $sectionHead = MasEmployee::where('section_id', $sectionId)
         // ->where('is_sectionHead', true)->first();
-        $sectionHead = MasEmployee::where('section_id', $sectionId)
+        $sectionHead = FilamentUser::where('section_id', $sectionId)
         ->whereHas('roles', fn ($query) => $query->where('name', 'Section Head'))
         ->first();
        
@@ -32,7 +32,10 @@ class CreateTransferClaim extends CreateRecord
     
         if ($approvalType->approval_type == "Hierarchy") {
                 // Fetch the record from the levels table based on the $hierarchy_id
-                $levelRecord = Level::where('hierarchy_id', $hierarchy_id)->first();
+                //$levelRecord = Level::where('hierarchy_id', $hierarchy_id)->first();
+                $levelRecord = Level::where('hierarchy_id', $hierarchy_id)
+                ->where('level', 1)
+                ->first();
     
                 if ($levelRecord) {
                     // Access the 'value' field from the level record
@@ -44,12 +47,30 @@ class CreateTransferClaim extends CreateRecord
                     // Check the levelValue and set the recipient accordingly
                     if ($levelValue === "SH") {
                          $recipient = $sectionHead->email; // Replace with the actual field name
-                    }
-                    $approval = $sectionHead;
+                         $approval = $sectionHead;
     
-                    Mail::to($recipient)->send(new ExpenseApplicationMail($approval, $currentUser));
+                        Mail::to($recipient)->send(new ExpenseApplicationMail($approval, $currentUser));
+                    }else{
+                        // Access the 'value' field from the level record
+                        $levelValue = $levelRecord->value;
+                        $userID = $levelRecord->emp_id;
+                        $approval = FilamentUser::where('id', $userID)->first();
+                        // Determine the recipient based on the levelValue
+                        $recipient = $approval->email;
+                
+                        Mail::to($recipient)->send(new ExpenseApplicationMail($approval, $currentUser));  
+                    
+
+                    }
+                    
                 }
             
+        }elseif($approvalType->approval_type == "Single User"){
+
+                $userID = $approvalType->employee_id;
+                $approval = FilamentUser::where('id', $userID)->first();
+                $recipient = $approval->email;
+                Mail::to($recipient)->send(new ExpenseApplicationMail($approval, $currentUser));  
         }
         return $data;
      

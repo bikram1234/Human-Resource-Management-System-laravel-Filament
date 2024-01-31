@@ -36,7 +36,10 @@ class CreateApplyAdvance extends CreateRecord
     
         if ($approvalType->approval_type == "Hierarchy") {
                 // Fetch the record from the levels table based on the $hierarchy_id
-                $levelRecord = Level::where('hierarchy_id', $hierarchy_id)->first();
+                //$levelRecord = Level::where('hierarchy_id', $hierarchy_id)->first();
+                $levelRecord = Level::where('hierarchy_id', $hierarchy_id)
+                ->where('level', 1)
+                ->first();
     
                 if ($levelRecord) {
                     // Access the 'value' field from the level record
@@ -48,12 +51,30 @@ class CreateApplyAdvance extends CreateRecord
                     // Check the levelValue and set the recipient accordingly
                     if ($levelValue === "SH") {
                          $recipient = $sectionHead->email; // Replace with the actual field name
-                    }
-                    $approval = $sectionHead;
+                         $approval = $sectionHead;
     
-                    Mail::to($recipient)->send(new AdvanceApplicationMail($approval, $currentUser));
+                        Mail::to($recipient)->send(new AdvanceApplicationMail($approval, $currentUser));
+                    }else{
+                        // Access the 'value' field from the level record
+                        $levelValue = $levelRecord->value;
+                        $userID = $levelRecord->emp_id;
+                        $approval = FilamentUser::where('id', $userID)->first();
+                        // Determine the recipient based on the levelValue
+                        $recipient = $approval->email;
+                
+                        Mail::to($recipient)->send(new AdvanceApplicationMail($approval, $currentUser));  
+                    
+
+                    }
+                    
                 }
             
+        }elseif($approvalType->approval_type == "Single User"){
+
+                $userID = $approvalType->employee_id;
+                $approval = FilamentUser::where('id', $userID)->first();
+                $recipient = $approval->email;
+                Mail::to($recipient)->send(new AdvanceApplicationMail($approval, $currentUser));  
         }
         return $data;
      

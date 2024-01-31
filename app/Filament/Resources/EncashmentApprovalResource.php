@@ -204,15 +204,27 @@ class EncashmentApprovalResource extends Resource
                     if ($levelValue === "DH") {
                         // Set the recipient to the section head's email address or user ID
                         $recipient = $departmentHead->email; // Replace with the actual field name
+                        $approval = $departmentHead;
+                        $currentUser = $user;
+        
+                        Mail::to($recipient)->send(new LeaveEncashmentMail($approval, $currentUser));
+                        Notification::make() 
+                        ->title('Leave Encashment Approved successfully')
+                        ->success()
+                        ->send();
+                    }else{
+                        // Access the 'value' field from the level record
+                        $levelValue = $levelRecord->value;
+                        $userID = $levelRecord->emp_id;
+                        $approval = FilamentUser::where('id', $userID)->first();
+                        // Determine the recipient based on the levelValue
+                        $recipient = $approval->email;
+        
+                        $currentUser = $user;
+        
+                        Mail::to($recipient)->send(new LeaveEncashmentMail($approval, $currentUser));  
                     }
-                    $approval = $departmentHead;
-                    $currentUser = $user;
-    
-                    Mail::to($recipient)->send(new LeaveEncashmentMail($approval, $currentUser));
-                    Notification::make() 
-                    ->title('Leave Encashment Approved successfully')
-                    ->success()
-                    ->send();
+                   
                 
                 }
     
@@ -282,6 +294,13 @@ class EncashmentApprovalResource extends Resource
                 return redirect()->back()->with('error', 'Leave Encashment cannot be approved.');
             }
         }else if($approvalType->approval_type === "Single User"){
+
+            $leaveApplication->leaveApproval->update([
+                'level1' => 'approved',
+                'level2' => 'approved',
+                'level3' => 'approved',
+                
+            ]);
              // Update the AppliedLeave model fields
              $leaveApplication->update([
                 'status' => 'approved',
