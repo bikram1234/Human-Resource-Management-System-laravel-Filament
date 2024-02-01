@@ -9,8 +9,12 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\MasEmployee;
+use App\Models\department;
 use Chiiya\FilamentAccessControl\Models\FilamentUser;
+use Filament\Forms\Get;
+use Illuminate\Support\Facades\Log;
+
+
 
 
 class LevelsRelationManager extends RelationManager
@@ -35,12 +39,40 @@ class LevelsRelationManager extends RelationManager
                 'MM' => "Management",
                 'HR' => "Human Resource",
                 'FH' => "Finance Head"
-            ])->required()->reactive()->label('Verifier'),
-            
+            ])->required()->reactive()->label('Verifier'), 
             Forms\Components\Select::make('emp_id')
-            ->options(
-                FilamentUser::all()->pluck('name', 'id')->toArray()
-            )
+            ->options(function ($get): array {
+                $verifier = $get('value');
+                if (!$verifier) {
+                    Log::warning('No verifier value found');
+                    return [];
+                }
+        
+                switch ($verifier) {
+                    case 'MM':
+                        $departmentName = 'Management Information System';
+                        break;
+                    case 'HR':
+                        $departmentName = 'Human Resource Management';
+                        break;
+                    case 'FH':
+                        $departmentName = 'Finance';
+                        break;
+                    default:
+                        $departmentName = null;
+                }
+        
+                if ($departmentName !== null) {
+                    $department = Department::where('name', $departmentName)->first();
+                    if ($department) {
+                        return FilamentUser::where('department_id', $department->id)->pluck('employee_display', 'id')->toArray();
+                    }
+                }
+        
+                Log::warning("No department found for verifier: {$verifier}");
+                return [];
+            })
+            ->reactive()
             ->label("Employee")
             ->visible(function(callable $get){
                 if(in_array((string)$get('value'),["MM", "HR", "FH"])){
@@ -55,6 +87,9 @@ class LevelsRelationManager extends RelationManager
                     return false;
                     }
                 })
+                  // ->options(
+                //FilamentUser::all()->pluck('name', 'id')->toArray()
+                // )
           ,            
             Forms\Components\DatePicker::make('start_date')
                 ->required(),
