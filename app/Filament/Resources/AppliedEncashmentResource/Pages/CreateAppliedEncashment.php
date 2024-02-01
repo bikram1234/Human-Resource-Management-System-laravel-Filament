@@ -23,6 +23,7 @@ class CreateAppliedEncashment extends CreateRecord
     {
         $currentUser = auth()->user();
         $sectionId = auth()->user()->section_id;
+        $departmentId = auth()->user()->department_id;
         $Encashment = encashment:: Where('name','Leave Encashment')->first();
         if ($Encashment) {
             $EncashmentId = $Encashment->id;
@@ -38,6 +39,9 @@ class CreateAppliedEncashment extends CreateRecord
         $sectionHead = FilamentUser::where('section_id', $sectionId)
             ->whereHas('roles', fn ($query) => $query->where('name', 'Section Head'))
             ->first();
+        $departmentHead =FilamentUser::where('section_id', $departmentId)
+        ->whereHas('roles', fn ($query) => $query->where('name', 'Department Head'))
+        ->first();    
        
         $encashment_id = $EncashmentId;
         $approvalRuleId = LeaveEncashmentApprovalRule::where('type_id', $encashment_id)->value('id');
@@ -64,6 +68,13 @@ class CreateAppliedEncashment extends CreateRecord
                          $approval = $sectionHead;
     
                         Mail::to($recipient)->send(new LeaveEncashmentMail($approval, $currentUser));
+
+                    }elseif($levelValue === "DH"){
+                        // Set the recipient to the section head's email address or user ID
+                        $recipient = $departmentHead->email; // Replace with the actual field name
+                        $approval = $departmentHead;
+                        Mail::to($recipient)->send(new LeaveEncashmentMail($approval, $currentUser));
+                        
                     }else{
                         // Access the 'value' field from the level record
                         $levelValue = $levelRecord->value;

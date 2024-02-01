@@ -29,7 +29,7 @@ class LevelsRelationManager extends RelationManager
                 3 => "Level3", 
             ])->required(),
             Forms\Components\Select::make('value')->options([
-                'IS' => "Immediate Supervisor",
+                //'IS' => "Immediate Supervisor",
                 'SH'=> "Section Head",
                 'DH'=> "Department Head",
                 'MM' => "Management",

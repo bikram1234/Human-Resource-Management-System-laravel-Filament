@@ -21,6 +21,8 @@ class CreateApplyAdvance extends CreateRecord
     {
         $currentUser = auth()->user();
         $sectionId = auth()->user()->section_id;
+        $departmentId = auth()->user()->department_id;
+
         // $sectionHead = MasEmployee::where('section_id', $sectionId)
         // ->where('roles', 'Section Head')->first();
         // Assuming 'Section Head' is the name of the role you want to find
@@ -28,6 +30,9 @@ class CreateApplyAdvance extends CreateRecord
         $sectionHead = FilamentUser::where('section_id', $sectionId)
             ->whereHas('roles', fn ($query) => $query->where('name', 'Section Head'))
             ->first();
+        $departmentHead =FilamentUser::where('section_id', $departmentId)
+            ->whereHas('roles', fn ($query) => $query->where('name', 'Department Head'))
+            ->first();    
        
         $advance_id = $data['advance_type_id'];
         $approvalRuleId = AdvanceApprovalRule::where('type_id', $advance_id)->value('id');
@@ -54,6 +59,12 @@ class CreateApplyAdvance extends CreateRecord
                          $approval = $sectionHead;
     
                         Mail::to($recipient)->send(new AdvanceApplicationMail($approval, $currentUser));
+                    }elseif($levelValue === "DH"){
+                        // Set the recipient to the section head's email address or user ID
+                        $recipient = $departmentHead->email; // Replace with the actual field name
+                        $approval = $departmentHead;
+                        Mail::to($recipient)->send(new AdvanceApplicationMail($approval, $currentUser));
+    
                     }else{
                         // Access the 'value' field from the level record
                         $levelValue = $levelRecord->value;

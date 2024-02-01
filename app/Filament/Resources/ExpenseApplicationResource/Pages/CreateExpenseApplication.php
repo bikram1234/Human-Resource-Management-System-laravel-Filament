@@ -22,10 +22,14 @@ class CreateExpenseApplication extends CreateRecord
     {
         $currentUser = auth()->user();
         $sectionId = auth()->user()->section_id;
+        $departmentId = auth()->user()->department_id;
         // $sectionHead = MasEmployee::where('section_id', $sectionId)
         // ->where('is_sectionHead', true)->first();
         $sectionHead = FilamentUser::where('section_id', $sectionId)
         ->whereHas('roles', fn ($query) => $query->where('name', 'Section Head'))
+        ->first();
+        $departmentHead =FilamentUser::where('section_id', $departmentId)
+        ->whereHas('roles', fn ($query) => $query->where('name', 'Department Head'))
         ->first();
        
         $expense_id = $data['expense_type_id'];
@@ -53,7 +57,13 @@ class CreateExpenseApplication extends CreateRecord
                          $approval = $sectionHead;
     
                         Mail::to($recipient)->send(new ExpenseApplicationMail($approval, $currentUser));
-                    
+                        
+                    }elseif($levelValue === "DH"){
+                        // Set the recipient to the section head's email address or user ID
+                        $recipient = $departmentHead->email; // Replace with the actual field name
+                        $approval = $departmentHead;
+                        Mail::to($recipient)->send(new ExpenseApplicationMail($approval, $currentUser));
+        
                     }else{
                         // Access the 'value' field from the level record
                         $levelValue = $levelRecord->value;
