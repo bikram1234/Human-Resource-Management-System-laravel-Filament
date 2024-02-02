@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('loan_advances', function (Blueprint $table) {
-            $table->id();
+        Schema::create('loan_advancetypes', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('name');
+            $table->string('condition');
+            $table->tinyInteger("status")->comment("1 for active, 0 for In-active");
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('loan_advances');
+        Schema::dropIfExists('loan_advancetypes');
     }
 };

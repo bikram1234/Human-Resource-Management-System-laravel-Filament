@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\ExpenseApplicationResource\Pages;
+namespace App\Filament\Resources\LoanAdvancetypeResource\Pages;
 
-use App\Filament\Resources\ExpenseApplicationResource;
+use App\Filament\Resources\LoanAdvancetypeResource;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditExpenseApplication extends EditRecord
+class EditLoanAdvancetype extends EditRecord
 {
-    protected static string $resource = ExpenseApplicationResource::class;
+    protected static string $resource = LoanAdvancetypeResource::class;
 
     protected function getActions(): array
     {

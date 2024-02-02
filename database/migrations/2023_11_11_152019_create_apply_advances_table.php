@@ -34,9 +34,9 @@ return new class extends Migration
             $table->enum('status', ['pending', 'approved','rejected'])->default('pending'); // Add the status field
             $table->string('remark')->nullable();
             $table->timestamps();
-
             $table->foreign('user_id')->references('id')->on('mas_employees')->onDelete('cascade');
-            $table->foreign('advance_type_id')->references('id')->on('advance_types')->onDelete('cascade');        });
+            $table->foreign('advance_type_id')->references('id')->on('advance_types')->onDelete('cascade');        
+        });
     }
 
     /**
