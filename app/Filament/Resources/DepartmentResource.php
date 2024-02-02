@@ -39,6 +39,9 @@ class DepartmentResource extends Resource
             Forms\Components\TextInput::make('name')
                 ->required()
                 ->maxLength(255),
+            Forms\Components\TextInput::make('short_code')
+                ->required()
+                ->maxLength(10),
             Forms\Components\Toggle::make('status')
                 ->required(),
         ]);
@@ -50,6 +53,7 @@ class DepartmentResource extends Resource
             ->columns([
                 TextColumn::make('id')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('short_code')->sortable()->searchable(),
                 Tables\Columns\IconColumn::make('status')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')

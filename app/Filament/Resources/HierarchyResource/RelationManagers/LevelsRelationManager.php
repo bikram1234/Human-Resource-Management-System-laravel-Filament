@@ -47,7 +47,6 @@ class LevelsRelationManager extends RelationManager
                     Log::warning('No verifier value found');
                     return [];
                 }
-        
                 switch ($verifier) {
                     case 'MM':
                         $departmentName = 'Management Information System';
@@ -86,11 +85,7 @@ class LevelsRelationManager extends RelationManager
                 }else{
                     return false;
                     }
-                })
-                  // ->options(
-                //FilamentUser::all()->pluck('name', 'id')->toArray()
-                // )
-          ,            
+                }),            
             Forms\Components\DatePicker::make('start_date')
                 ->required(),
             Forms\Components\DatePicker::make('end_date')

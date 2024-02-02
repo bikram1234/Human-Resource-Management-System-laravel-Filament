@@ -11,6 +11,7 @@ class department extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'short_code',
         'status'
     ];
 
