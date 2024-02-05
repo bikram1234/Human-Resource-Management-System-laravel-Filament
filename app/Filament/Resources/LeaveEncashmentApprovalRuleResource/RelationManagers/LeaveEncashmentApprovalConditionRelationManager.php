@@ -117,5 +117,11 @@ class LeaveEncashmentApprovalConditionRelationManager extends RelationManager
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
-    }    
+    } 
+    public static function getRelations(): array
+    {
+        return [
+            LeaveEncashmentFormulaRelationManager::class,
+        ];
+    }        
 }

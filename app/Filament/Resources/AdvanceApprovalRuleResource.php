@@ -20,6 +20,10 @@ class AdvanceApprovalRuleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
     protected static ?string $navigationGroup = 'Setting';
+    protected static ?string $navigationLabel = 'Advance Approval Rules';
+
+    protected static ?string $pluralModelLabel = 'Rule List';
+    protected static ?string $modelLabel = 'Rules';
 
     protected static ?int $navigationSort = 4;
 
@@ -27,7 +31,7 @@ class AdvanceApprovalRuleResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('For')
+            Forms\Components\TextInput::make('For')
                 ->required()
                 ->maxLength(255)
                 ->default("Advance")

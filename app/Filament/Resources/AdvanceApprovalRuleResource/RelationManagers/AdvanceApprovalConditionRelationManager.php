@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Models\Hierarchy;
 use App\Models\Level;
-use App\Models\MasEmployee;
 use Chiiya\FilamentAccessControl\Models\FilamentUser;
 
 
@@ -125,7 +124,7 @@ class AdvanceApprovalConditionRelationManager extends RelationManager
     public static function getRelations(): array
     {
         return [
-            ExpenseFormulaRelationManager::class,
+            AdvanceFormulaRelationManager::class,
         ];
     }   
 }

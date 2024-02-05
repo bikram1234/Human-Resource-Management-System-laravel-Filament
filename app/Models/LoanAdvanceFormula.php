@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -10,8 +9,10 @@ use App\Scopes\CreatedByScope;
 use App\Scopes\EditedByScope;
 use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class AdvanceFormula extends Model
+
+class LoanAdvanceFormula extends Model
 {
     use HasFactory, HasUuids;
 
@@ -32,7 +33,7 @@ class AdvanceFormula extends Model
 
     public function approvalRule()
     {
-        return $this->belongsTo(AdvanceApprovalRule::class, 'approval_rule_id');
+        return $this->belongsTo(LoanAdvanceApprovalRule::class, 'approval_rule_id');
     }
 
 
@@ -51,5 +52,4 @@ class AdvanceFormula extends Model
                 $model->edited_by = Auth::id();
             }
         });
-    }
-}
+    }}

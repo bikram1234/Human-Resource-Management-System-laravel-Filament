@@ -4,21 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Chiiya\FilamentAccessControl\Models\FilamentUser;
 
-
-
-class LoanAdvancetype extends Model
+class BudgetCode extends Model
 {
-    use HasFactory, HasUuids;
-
+    use HasFactory;
     protected $fillable = [
-        'name',
-        'condition',
-        'status',
+        'title',
+        'code',
+        'particular',
     ];
-
     public function applyloan()
     {
         return $this->hasMany(ApplyLoanAdvance::class, 'loan_type_id');

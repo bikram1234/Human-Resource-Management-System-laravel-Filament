@@ -19,7 +19,8 @@ return new class extends Migration
             $table->date('date');
             $table->uuid('loan_type_id');
             $table->foreign('loan_type_id')->references('id')->on('loan_advancetypes')->onDelete('cascade'); 
-            $table->uuid('budget_code');
+            $table->unsignedBigInteger('budget_code');
+            $table->foreign('budget_code')->references('id')->on('budget_codes')->onDelete('cascade'); 
             $table->decimal('amount', 10, 2);
             $table->string('activity');
             $table->string('subject')->nullable();

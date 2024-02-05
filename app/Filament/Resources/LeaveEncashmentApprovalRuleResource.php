@@ -23,6 +23,8 @@ class LeaveEncashmentApprovalRuleResource extends Resource
     protected static ?string $navigationGroup = 'Setting';
 
     protected static ?string $navigationLabel = 'Leave Encashment Rule';
+    protected static ?string $pluralModelLabel = 'Rule List';
+    protected static ?string $modelLabel = 'Rules';
 
 
 

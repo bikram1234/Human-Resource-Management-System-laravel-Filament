@@ -19,8 +19,11 @@ class LeaveApprovalRuleResource extends Resource
     protected static ?string $model = LeaveApprovalRule::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-
     protected static ?string $navigationGroup = 'Setting';
+    protected static ?string $pluralModelLabel = 'Rule List';
+    protected static ?string $modelLabel = 'Rules';
+    protected static ?string $navigationLabel = 'Leave Approval Rules';
+
 
     public static function form(Form $form): Form
     {

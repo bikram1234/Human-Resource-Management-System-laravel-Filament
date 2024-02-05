@@ -9,7 +9,7 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Models\MasEmployee;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use App\Models\LeaveFormula;
 
 class LeaveFormulasRelationManager extends RelationManager
@@ -44,7 +44,7 @@ class LeaveFormulasRelationManager extends RelationManager
                 // Add other operator options as needed
             ])->required(),
             Forms\Components\Select::make('employee_id')->options(
-                MasEmployee::all()->pluck('name', 'id')->toArray()
+                FilamentUser::all()->pluck('name', 'id')->toArray()
             )
                 ->visible(function(callable $get){
                     if(in_array((string)$get('field'),["User"])){

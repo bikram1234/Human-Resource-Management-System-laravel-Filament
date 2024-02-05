@@ -135,6 +135,8 @@ class DSAApprovalResource extends Resource
         return [
             'index' => Pages\ListDSAApprovals::route('/'),
             'create' => Pages\CreateDSAApproval::route('/create'),
+           // 'view' => Pages\DSASettlement::route('/{record}'),
+
         ];
     }
     public static function ApproveExpense($record) {

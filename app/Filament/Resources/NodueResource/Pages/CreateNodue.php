@@ -20,9 +20,11 @@ class CreateNodue extends CreateRecord
     {
         $currentUser = auth()->user();
         $departmentID = $currentUser->department_id;
-    
+
         // Get all sections under the current department
         $sections = Department::find($departmentID)->sections;
+
+
     
         // Find section heads in the current department
         $sectionHeads = FilamentUser::whereIn('section_id', $sections->pluck('id'))

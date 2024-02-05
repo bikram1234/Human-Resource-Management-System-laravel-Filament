@@ -2,10 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ExpenseApprovalRuleResource\Pages;
-use App\Filament\Resources\ExpenseApprovalRuleResource\RelationManagers;
-use App\Models\ExpenseApprovalRule;
-use App\Models\ExpenseType;
+use App\Filament\Resources\LoanAdvanceApprovalRuleResource\Pages;
+use App\Filament\Resources\LoanAdvanceApprovalRuleResource\RelationManagers;
+use App\Models\LoanAdvanceApprovalRule;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -13,44 +12,43 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Models\LoanAdvancetype;
 
-class ExpenseApprovalRuleResource extends Resource
+
+class LoanAdvanceApprovalRuleResource extends Resource
 {
-    protected static ?string $model = ExpenseApprovalRule::class;
+    protected static ?string $model = LoanAdvanceApprovalRule::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
     protected static ?string $navigationGroup = 'Setting';
+    protected static ?string $navigationLabel = 'Loan Approval Rules';
     protected static ?string $pluralModelLabel = 'Rule List';
     protected static ?string $modelLabel = 'Rules';
-    protected static ?string $navigationLabel = 'Expense Approval Rules';
 
-    protected static ?int $navigationSort = 3;
-
-
-
+    protected static ?int $navigationSort = 5;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('For')
-                    ->required()
-                    ->maxLength(255)
-                    ->default("Expense")
-                    ->disabled(),
-                Forms\Components\TextInput::make('RuleName')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Select::make('type_id')
-                    ->options(
-                        ExpenseType::all()->pluck('name', 'id')->toArray()
-                    )
-                    ->required(),
-                Forms\Components\DatePicker::make('start_date')
-                    ->required(),
-                Forms\Components\DatePicker::make('end_date'),
-                Forms\Components\Toggle::make('status')
-                    ->required(),
+                ->required()
+                ->maxLength(255)
+                ->default("Loan Advance")
+                ->disabled(),
+            Forms\Components\TextInput::make('RuleName')
+                ->required()
+                ->maxLength(255),
+            Forms\Components\Select::make('type_id')
+                ->options(
+                    LoanAdvancetype::all()->pluck('name', 'id')->toArray()
+                )
+                ->required(),
+            Forms\Components\DatePicker::make('start_date')
+                ->required(),
+            Forms\Components\DatePicker::make('end_date'),
+            Forms\Components\Toggle::make('status')
+                ->required(),
             ]);
     }
 
@@ -82,17 +80,16 @@ class ExpenseApprovalRuleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ExpenseApprovalConditionRelationManager::class,
-            RelationManagers\ExpenseFormulaRelationManager::class,
+            //
         ];
     }
     
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListExpenseApprovalRules::route('/'),
-            'create' => Pages\CreateExpenseApprovalRule::route('/create'),
-            'edit' => Pages\EditExpenseApprovalRule::route('/{record}/edit'),
+            'index' => Pages\ListLoanAdvanceApprovalRules::route('/'),
+            'create' => Pages\CreateLoanAdvanceApprovalRule::route('/create'),
+            'edit' => Pages\EditLoanAdvanceApprovalRule::route('/{record}/edit'),
         ];
     }    
 }

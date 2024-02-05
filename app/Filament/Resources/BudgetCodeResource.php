@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\LoanAdvancetypeResource\Pages;
-use App\Filament\Resources\LoanAdvancetypeResource\RelationManagers;
-use App\Models\LoanAdvancetype;
+use App\Filament\Resources\BudgetCodeResource\Pages;
+use App\Filament\Resources\BudgetCodeResource\RelationManagers;
+use App\Models\BudgetCode;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -13,30 +13,30 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class LoanAdvancetypeResource extends Resource
+class BudgetCodeResource extends Resource
 {
-    protected static ?string $model = LoanAdvancetype::class;
+    protected static ?string $model = BudgetCode::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
     protected static ?string $navigationGroup = 'Loan For Advance';
-    protected static ?string $navigationLabel = 'Types';
-    protected static ?string $pluralModelLabel = 'All Types';
-    protected static ?string $modelLabel = 'Types';
-    protected static ?int $navigationSort = 1;
+    protected static ?string $navigationLabel = 'Budget Code';
+    protected static ?string $pluralModelLabel = 'All Codes';
+    protected static ?string $modelLabel = 'Codes';
+    protected static ?int $navigationSort = 2;
 
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('code')
+                    ->required(),
+                Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('condition')
+                Forms\Components\TextInput::make('particular')
                     ->required()
-                    ->maxLength(255),    
-                Forms\Components\Toggle::make('status')
-                    ->required(),
+                    ->maxLength(255),
             ]);
     }
 
@@ -44,10 +44,9 @@ class LoanAdvancetypeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('condition'),
-                Tables\Columns\IconColumn::make('status')
-                    ->boolean(),
+                Tables\Columns\TextColumn::make('code'),
+                Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('particular'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime(),
                 Tables\Columns\TextColumn::make('updated_at')
@@ -74,9 +73,9 @@ class LoanAdvancetypeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListLoanAdvancetypes::route('/'),
-            'create' => Pages\CreateLoanAdvancetype::route('/create'),
-            'edit' => Pages\EditLoanAdvancetype::route('/{record}/edit'),
+            'index' => Pages\ListBudgetCodes::route('/'),
+            'create' => Pages\CreateBudgetCode::route('/create'),
+            'edit' => Pages\EditBudgetCode::route('/{record}/edit'),
         ];
     }    
 }

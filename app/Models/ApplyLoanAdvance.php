@@ -25,4 +25,8 @@ class ApplyLoanAdvance extends Model
     {
         return $this->belongsTo(LoanAdvancetype::class, 'loan_type_id');
     }
+    public function code()
+    {
+        return $this->belongsTo(BudgetCode::class, 'budget_code');
+    }
 }

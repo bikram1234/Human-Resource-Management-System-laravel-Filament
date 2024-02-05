@@ -7,7 +7,7 @@ use App\Filament\Resources\ApplyAdvanceResource\RelationManagers;
 use App\Models\ApplyAdvance;
 use App\Models\DeviceEMI;
 use App\Models\AdvanceType;
-use App\Models\MasEmployee;
+use Chiiya\FilamentAccessControl\Models\FilamentUser;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -43,7 +43,7 @@ class ApplyAdvanceResource extends Resource
     {
         $currentUserId = Auth::id();
         $currentDateTime = now();
-        $user = MasEmployee::find($currentUserId);
+        $user = FilamentUser::find($currentUserId);
         $empy_id = $user->emp_id;
         $advanceNo = 'ADL|EM|'.$empy_id.'|'.$currentDateTime->format('YmdHis');
 
