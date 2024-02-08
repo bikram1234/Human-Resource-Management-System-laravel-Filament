@@ -71,6 +71,7 @@ class LevelsRelationManager extends RelationManager
                 Log::warning("No department found for verifier: {$verifier}");
                 return [];
             })
+            ->searchable()
             ->reactive()
             ->label("Employee")
             ->visible(function(callable $get){

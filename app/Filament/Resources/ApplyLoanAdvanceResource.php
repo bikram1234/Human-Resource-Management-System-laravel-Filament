@@ -47,12 +47,6 @@ class ApplyLoanAdvanceResource extends Resource
         $shortCode = department::where('id', $department_id)->value('short_code');
         //dd($shortCode);
         $referenceNo = 'TIPL|'.$shortCode.'|'.$empy_id;
-
-
-
-
-
-
         return $form
             ->schema([
                 Forms\Components\Hidden::make('user_id')
@@ -103,8 +97,13 @@ class ApplyLoanAdvanceResource extends Resource
                     $selectedLoanType = LoanAdvancetype::find($get('loan_type_id'));
                     return $selectedLoanType && $selectedLoanType->name === 'Advance Loan Max' ? 100000 : 5000;
                 }),
-                Forms\Components\Textarea::make('subject')
-                ->rows(2),
+                Forms\Components\TextInput::make('subject')
+                ->required(),
+                Forms\Components\Textarea::make('description')
+                ->rows(2)
+                ->required(),
+                Forms\Components\TextInput::make('acc_number')
+                ,
                 Forms\Components\FileUpload::make('attachment')
                 ->preserveFilenames() 
 
@@ -132,7 +131,7 @@ class ApplyLoanAdvanceResource extends Resource
                 Action::make('Download')
                 ->action(fn (ApplyLoanAdvance $record) => ApplyLoanAdvanceResource::downloadFile($record))
                 ->hidden(function ( ApplyLoanAdvance $record) {
-                    return $record->upload_file === null;
+                    return $record->attachment === null;
                 })
             ])
             ->bulkActions([

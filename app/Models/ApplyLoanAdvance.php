@@ -13,7 +13,7 @@ class ApplyLoanAdvance extends Model
 {
     use HasFactory, HasUuids;
     protected $fillable = [
-        'reference_no','user_id', 'loan_type_id','date', 'activity','subject', 'from_date', 'to_date','amount', 'budget_code', 'attachment', 'status', 'remark'
+        'reference_no','user_id', 'loan_type_id','date', 'activity','subject','description', 'from_date', 'to_date','amount', 'acc_no','budget_code', 'attachment', 'status', 'remark'
     ];
 
     // Define the relationship with the User model

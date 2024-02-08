@@ -48,20 +48,4 @@ class nodueapprovalPolicy
     {
         return $user->can('nodueapproval.delete');
     }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, nodueapproval $nodueapproval): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, nodueapproval $nodueapproval): bool
-    {
-        //
-    }
 }

@@ -50,19 +50,5 @@ class TransferClaimApprovalPolicy
         return $user->can('TransferClaimApproval.delete');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, TransferClaimApproval $TransferClaimApproval): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, TransferClaimApproval $TransferClaimApproval): bool
-    {
-        //
-    }
+   
 }

@@ -2,27 +2,29 @@
 
 namespace App\Policies;
 
-use App\Models\TimeZone;
 use Chiiya\FilamentAccessControl\Models\FilamentUser as User;
+use App\Filament\Resources\ApplyAdvanceApprovalResource as approval;
 
-class TimeZonePolicy
+
+
+class ApplyAdvanceApprovalResourcePolicy
 {
-                  /**
+     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->can("TimeZone.view");
+        return $user->can("approval.view");
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, TimeZone $storelocation): bool
+    public function view(User $user, approval $approval): bool
     {
         // dd($LeaveApproval->AppliedLeave->employee_id);
 
-            return $user->can("TimeZone.view");
+            return $user->can("approval.view");
         
     }
 
@@ -31,24 +33,22 @@ class TimeZonePolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('TimeZone.create');
+        return $user->can('approval.create');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, TimeZone $TimeZone): bool
+    public function update(User $user, approval $approval): bool
     {
-        return $user->can('TimeZone.update');
+        return $user->can('approval.update');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, TimeZone $TimeZone): bool
+    public function delete(User $user, approval $approval): bool
     {
-        return $user->can('TimeZone.delete');
+        return $user->can('approval.delete');
     }
-
-  
 }

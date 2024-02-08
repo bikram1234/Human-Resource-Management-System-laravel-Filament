@@ -6,6 +6,8 @@ use App\Models\ApplyAdvance;
 use Chiiya\FilamentAccessControl\Models\FilamentUser as User;
 use App\Models\ApplyAdvancet;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
 class ApplyAdvancePolicy
 {
     public static function canViewForRecord(Model $ownerRecord): bool
@@ -26,4 +28,7 @@ class ApplyAdvancePolicy
         {
             return $user->designation_id === 3; // Replace 3 with the actual designation_id for Management
         }
+
+    
+
 }

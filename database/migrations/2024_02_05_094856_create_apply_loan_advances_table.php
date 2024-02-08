@@ -24,6 +24,8 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->string('activity');
             $table->string('subject')->nullable();
+            $table->string('description')->nullable();
+            $table->integer('acc_no')->nullable();
             $table->date('from_date')->nullable();
             $table->date('to_date')->nullable();
             $table->string('attachment')->nullable();
