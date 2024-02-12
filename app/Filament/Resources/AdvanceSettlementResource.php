@@ -72,7 +72,7 @@ class AdvanceSettlementResource extends Resource
                 ->default(now()->toDateString())  // Set default value to current date
                 ->disabled()  // Make the field disabled
                 ->required(),
-                Forms\Components\Select::make('advance_no')
+                Forms\Components\Select::make('loan_advance_id')
                 ->options($userAdvances)
                 ->label("Reference Number")
                 ->required()

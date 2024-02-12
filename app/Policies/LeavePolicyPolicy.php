@@ -49,19 +49,4 @@ class LeavePolicyPolicy
         return $user->can('LeavePolicy.delete');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, LeavePolicy $LeavePolicy): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, LeavePolicy $LeavePolicy): bool
-    {
-        //
-    }
 }

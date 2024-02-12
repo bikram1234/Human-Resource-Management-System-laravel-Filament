@@ -49,19 +49,5 @@ class ExpenseTypePolicy
         return $user->can('ExpenseType.delete');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, ExpenseType $ExpenseType): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, ExpenseType $ExpenseType): bool
-    {
-        //
-    }
+    
 }

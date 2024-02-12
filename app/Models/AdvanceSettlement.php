@@ -17,7 +17,7 @@ class AdvanceSettlement extends Model
         'user_id',
         'loantype_id',
         'date',
-        'advance_no',
+        'loan_advance_id',
         'advance_amount',
         'balance_amount',
         'attachment',
@@ -33,7 +33,7 @@ class AdvanceSettlement extends Model
     }
     public function loanadvance()
     {
-        return $this->belongsTo(ApplyLoanAdvance::class,'advance_no');
+        return $this->belongsTo(ApplyLoanAdvance::class,'loan_advance_id');
     }
     public function loantype()
     {

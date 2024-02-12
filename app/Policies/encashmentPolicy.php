@@ -49,19 +49,5 @@ class encashmentPolicy
         return $user->can('encashment.delete');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, encashment $encashment): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, encashment $encashment): bool
-    {
-        //
-    }
+  
 }

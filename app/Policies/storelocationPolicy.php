@@ -50,19 +50,4 @@ class storelocationPolicy
         return $user->can('storelocation.delete');
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, storelocation $storelocation): bool
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, storelocation $storelocation): bool
-    {
-        //
-    }
 }

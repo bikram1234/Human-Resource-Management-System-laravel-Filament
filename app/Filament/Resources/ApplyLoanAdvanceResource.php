@@ -103,6 +103,7 @@ class ApplyLoanAdvanceResource extends Resource
                 ->rows(2)
                 ->required(),
                 Forms\Components\TextInput::make('acc_number')
+                ->label("Bank Account Number")
                 ,
                 Forms\Components\FileUpload::make('attachment')
                 ->preserveFilenames() 

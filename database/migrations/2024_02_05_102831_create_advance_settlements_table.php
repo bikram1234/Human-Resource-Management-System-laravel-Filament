@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('date'); 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('mas_employees')->onDelete('cascade');
-            $table->uuid('advance_no')->required();
+            $table->uuid('loan_advance_id')->required();
             $table->foreign('loan_advance_id')->references('id')->on('apply_loan_advances')->onDelete('cascade');
             $table->uuid('loantype_id');
             $table->foreign('loantype_id')->references('id')->on('loan_advancetypes')->onDelete('cascade');
