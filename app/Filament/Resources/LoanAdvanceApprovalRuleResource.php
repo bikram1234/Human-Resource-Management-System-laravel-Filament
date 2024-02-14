@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\LoanAdvanceApprovalRuleResource\Pages;
 use App\Filament\Resources\LoanAdvanceApprovalRuleResource\RelationManagers;
+use App\Models\LoanAdvanceApprovalCondition;
 use App\Models\LoanAdvanceApprovalRule;
+use App\Models\LoanAdvanceFormula;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -80,7 +82,9 @@ class LoanAdvanceApprovalRuleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\LoanAdvanceApprovalConditionRelationManager::class,
+            RelationManagers\LoanAdvanceFormulaRelationManager::class
+
         ];
     }
     

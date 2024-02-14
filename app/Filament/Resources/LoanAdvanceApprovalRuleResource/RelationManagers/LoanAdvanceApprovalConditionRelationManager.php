@@ -16,7 +16,7 @@ use App\Models\LoanAdvanceFormula;
 
 class LoanAdvanceApprovalConditionRelationManager extends RelationManager
 {
-    protected static string $relationship = 'LoanAdvanceApprovalCondition';
+    protected static string $relationship = 'approvalConditions';
 
     protected static ?string $recordTitleAttribute = 'approval_type';
 

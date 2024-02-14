@@ -47,7 +47,7 @@ class AdvanceSettlementResource extends Resource
             ->pluck('reference_no', 'id');
 
         // Get the IDs of advances that exist in the dsa_settlements table
-        $existingAdvanceIds = DB::table('advance_settlements')->pluck('advance_no');
+        $existingAdvanceIds = DB::table('advance_settlements')->pluck('loan_advance_id');
         //dd($existingAdvanceIds);
 
         // Filter the user's advances to include only those that do not exist in the settlements table

@@ -44,9 +44,10 @@ class ApplyLoanAdvanceResource extends Resource
         $user = FilamentUser::find($currentUserId);
         $department_id = $user->department_id;
         $empy_id = $user->emp_id;
+
         $shortCode = department::where('id', $department_id)->value('short_code');
         //dd($shortCode);
-        $referenceNo = 'TIPL|'.$shortCode.'|'.$empy_id;
+        $referenceNo = 'TIPL|'.$shortCode.'|'.$empy_id.'|'.$currentDateTime->format('YmdHis');
         return $form
             ->schema([
                 Forms\Components\Hidden::make('user_id')
@@ -64,15 +65,19 @@ class ApplyLoanAdvanceResource extends Resource
                 ->required(),
                 Forms\Components\Select::make('loan_type_id')
                 ->options(
-                    LoanAdvancetype::all()->pluck('condition', 'id')->toArray()
-                )
+                    LoanAdvancetype::query()
+                    ->where('id', '<>', '9b551902-3954-40f0-aed0-4bcde658e269')
+                    ->pluck('condition', 'id')
+                    ->toArray()                
+                    )
                 ->reactive()
                 ->label('Loan type')
                 ->required(),
                 Forms\Components\Select::make('budget_code')
                 ->options(
-                    BudgetCode::all()->pluck('particular', 'id')->toArray()
-                )
+                    $budgetCodes = BudgetCode::selectRaw("CONCAT(particular, ' ', code) as combined_field, id")
+                    ->pluck('combined_field', 'id')
+                    ->toArray()                )
                 ->label('Budget Code')
                 ->searchable()
                 ->required(),
